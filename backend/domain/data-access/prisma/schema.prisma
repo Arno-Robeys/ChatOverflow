@@ -1,5 +1,5 @@
 // This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// learn more about it in the docs: https://pris.ly/d/risma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -10,3 +10,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Chat {
+  chatid Int @id @default(autoincrement())
+  userid Int
+  message String
+  time String
+  read Boolean @default(false)
+  user User @relation(fields: [userid], references: [userid])
+  notifications Notification[]
+}
+
+model Notification {
+  notificationid Int @id @default(autoincrement())
+  userid Int
+  chatid Int
+  message String
+  time String
+  user User @relation(fields: [userid], references: [userid])
+  chat Chat @relation(fields: [chatid], references: [chatid])
+}
+
+model Profile {
+  userid Int @unique
+  description String?
+  avatar String?
+  work String?
+  hobby String?
+  rating String?
+  education String?
+  tags String?
+  user User @relation(fields: [userid], references: [userid])
+}
+
+model User {
+  userid Int @id @default(autoincrement())
+  firstname String
+  lastname String
+  email String @unique
+  password String
+  nickname String?
+  chats Chat[]
+  notifications Notification[]
+  profile Profile?
+}
