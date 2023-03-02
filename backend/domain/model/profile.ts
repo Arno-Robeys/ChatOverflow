@@ -1,7 +1,7 @@
 import { User } from "./user";
 
 export class Profile {
-    readonly userid?: User;
+    readonly userid: User;
     readonly description?: string;
     readonly avatar?: string;
     readonly work?: string;
@@ -28,6 +28,6 @@ export class Profile {
     static create({ userid, description, avatar, work, hobby, rating, education, tags }): Profile {
         return new Profile(userid, description, avatar, work, hobby, rating, education, tags);
     }
-    
+
 
 }

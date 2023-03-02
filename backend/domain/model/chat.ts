@@ -1,13 +1,13 @@
 import { User } from "./user";
 
 export class Chat {
-    readonly chatid?: number;
-    readonly userid?: User;
+    readonly chatid: number;
+    readonly userid: User;
     readonly message: string;
     readonly time: string;
     readonly read: boolean;
 
-    constructor(userid: User, message: string, time: string, read: boolean, chatid?: number) {
+    constructor(userid: User, message: string, time: string, read: boolean, chatid: number) {
         this.chatid = chatid;
         this.userid = userid;
         this.message = message;

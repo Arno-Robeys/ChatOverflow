@@ -2,13 +2,13 @@ import { Chat } from "./chat";
 import { User } from "./user";
 
 export class Notification {
-    readonly notificationid?: number;
-    readonly userid?: User;
-    readonly chatid?: Chat;
-    readonly messsage?: Chat;
-    readonly time?: string;
+    readonly notificationid: number;
+    readonly userid: User;
+    readonly chatid: Chat;
+    readonly messsage: Chat;
+    readonly time: string;
 
-    constructor(userid: User, chatid: Chat, messsage: Chat, time: string, notificationid?: number) {
+    constructor(userid: User, chatid: Chat, messsage: Chat, time: string, notificationid: number) {
         this.notificationid = notificationid;
         this.userid = userid;
         this.chatid = chatid;

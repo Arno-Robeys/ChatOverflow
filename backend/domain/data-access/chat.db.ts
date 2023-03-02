@@ -4,6 +4,10 @@ const chats: Chat[] = [];
 
 export class ChatDao {
     async createChat(chat: Chat): Promise<Chat> {
-        return;
+        return Chat.create({ chatid: chat.chatid, userid: chat.userid, message: chat.message, time: chat.time, read: chat.read });
     }    
+
+    async getAllChats(): Promise<Chat[]> {
+        return chats;
+    }
 }

@@ -18,20 +18,18 @@ export class UserDao {
     return users.find(user => user.userid === userid);
   }
 
-  async updateUser(user: User): Promise<User> {
-    const index = users.findIndex(u => u.userid === user.userid);
-    if (index === -1) throw new Error('User not found');
-    
-    users[index] = user;
-    
-    return user;
-  }
-
   async deleteUserById(userid: number): Promise<boolean> {
     const index = users.findIndex(u => u.userid === userid);
     if (index === -1) throw new Error('User not found');
     users.splice(index, 1);
     return true;
+  }
+
+  async updateUser(user: User): Promise<User> {
+    const index = users.findIndex(u => u.userid === user.userid);
+    if (index === -1) throw new Error('User not found');
+    users[index] = user;
+    return user;
   }
 
 }
