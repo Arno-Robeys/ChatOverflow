@@ -11,45 +11,52 @@ datasource db {
 }
 
 model Chat {
-  chatid Int @id @default(autoincrement())
-  userid Int
-  message String
-  time String
-  read Boolean @default(false)
-  user User @relation(fields: [userid], references: [userid])
-  notifications Notification[]
+  chatid       Int            @id @default(autoincrement())
+  users        User[]
+  Message      Message[]
+  Notification Notification[]
+}
+
+model Message {
+  messageid Int      @id @default(autoincrement())
+  chatid    Int
+  userid    Int
+  message   String
+  time      DateTime @default(now())
+  read      Boolean  @default(false)
+  chat      Chat     @relation(fields: [chatid], references: [chatid])
+  user      User     @relation(fields: [userid], references: [userid])
 }
 
 model Notification {
-  notificationid Int @id @default(autoincrement())
-  userid Int
-  chatid Int
-  message String
-  time String
-  user User @relation(fields: [userid], references: [userid])
-  chat Chat @relation(fields: [chatid], references: [chatid])
+  notificationid Int  @id @default(autoincrement())
+  userid         Int
+  chatid         Int
+  user           User @relation(fields: [userid], references: [userid])
+  chat           Chat @relation(fields: [chatid], references: [chatid])
 }
 
 model Profile {
-  userid Int @unique
+  userid      Int     @unique
   description String?
-  avatar String?
-  work String?
-  hobby String?
-  rating String?
-  education String?
-  tags String?
-  user User @relation(fields: [userid], references: [userid])
+  avatar      String?
+  work        String?
+  hobby       String?
+  rating      String?
+  education   String?
+  tags        String?
+  user        User    @relation(fields: [userid], references: [userid])
 }
 
 model User {
-  userid Int @id @default(autoincrement())
-  firstname String
-  lastname String
-  email String @unique
-  password String
-  nickname String?
-  chats Chat[]
+  userid        Int            @id @default(autoincrement())
+  firstname     String
+  lastname      String
+  email         String         @unique
+  password      String
+  nickname      String?
+  chats         Chat[]
   notifications Notification[]
-  profile Profile?
+  profile       Profile?
+  Message       Message[]
 }

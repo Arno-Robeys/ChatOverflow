@@ -1,7 +1,7 @@
 import { User } from "./user";
 
 export class Profile {
-    readonly userid: User;
+    readonly userid?: User;
     readonly description?: string;
     readonly avatar?: string;
     readonly work?: string;
@@ -21,13 +21,7 @@ export class Profile {
         this.tags = tags;
     }
 
-    equals(other: Profile): boolean {
-        return this.userid === other.userid && this.description === other.description && this.avatar === other.avatar && this.work === other.work && this.hobby === other.hobby && this.rating === other.rating && this.education === other.education && this.tags === other.tags;
-    }
 
-    static create({ userid, description, avatar, work, hobby, rating, education, tags }): Profile {
-        return new Profile(userid, description, avatar, work, hobby, rating, education, tags);
-    }
 
 
 }
