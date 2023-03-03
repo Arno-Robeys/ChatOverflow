@@ -1,5 +1,6 @@
 import { User } from '../model/user';
 import database from '../data-access/prisma/database';
+import { UserMapper } from './user.mapper';
 
 const createUser = async (user: User): Promise<User> => {
   return await database.user.create({data : user});
