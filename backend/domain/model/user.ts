@@ -6,13 +6,20 @@ export class User {
     readonly password: string;
     readonly nickname?: string;
 
-    constructor(firstname: string, lastname: string, email: string, password: string, userid?: number, nickname?: string) {
-        this.userid = userid;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
+    constructor(user: {
+        firstname: string;
+        lastname: string;
+        email: string;
+        password: string;
+        userid?: number;
+        nickname?: string;
+    }) {
+        this.userid = user.userid;
+        this.firstname = user.firstname;
+        this.lastname = user.lastname;
+        this.email = user.email;
+        this.password = user.password;
+        this.nickname = user.nickname;
     }
 
  

@@ -10,16 +10,26 @@ export class Profile {
     readonly education?: string;
     readonly tags?: string;
 
-    constructor(userid: User, description?: string, avatar?: string, work?: string, hobby?: string, rating?: string, education?: string, tags?: string) {
-        this.userid = userid;
-        this.description = description;
-        this.avatar = avatar;
-        this.work = work;
-        this.hobby = hobby;
-        this.rating = rating;
-        this.education = education;
-        this.tags = tags;
+    constructor(user: {
+        userid: User;
+        description?: string;
+        avatar?: string;
+        work?: string;
+        hobby?: string;
+        rating?: string;
+        education?: string;
+        tags?: string;
+    }) {
+        this.userid = user.userid;
+        this.description = user.description;
+        this.avatar = user.avatar;
+        this.work = user.work;
+        this.hobby = user.hobby;
+        this.rating = user.rating;
+        this.education = user.education;
+        this.tags = user.tags;
     }
+    
 
 
 

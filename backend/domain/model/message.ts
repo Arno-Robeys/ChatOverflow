@@ -7,13 +7,20 @@ export class Message {
     readonly time: string;
     readonly read: boolean;
 
-    constructor(userid: User, message: string, time: string, read: boolean, chatid: number) {
-        this.chatid = chatid;
-        this.userid = userid;
-        this.message = message;
-        this.time = time;
-        this.read = read;
+    constructor(chatMessage: {
+        userid: User;
+        message: string;
+        time: string;
+        read: boolean;
+        chatid: number;
+    }) {
+        this.chatid = chatMessage.chatid;
+        this.userid = chatMessage.userid;
+        this.message = chatMessage.message;
+        this.time = chatMessage.time;
+        this.read = chatMessage.read;
     }
+    
 
 
 }

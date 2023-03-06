@@ -4,10 +4,14 @@ export class Chat {
     readonly chatid: number;
     readonly users: User[];
 
-    constructor(users: User[], chatid: number) {
-        this.chatid = chatid;
-        this.users = users;
+    constructor(chatUsers: {
+        users: User[];
+        chatid: number;
+    }) {
+        this.chatid = chatUsers.chatid;
+        this.users = chatUsers.users;
     }
+    
 
 
 

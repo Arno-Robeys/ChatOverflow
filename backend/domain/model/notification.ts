@@ -9,13 +9,20 @@ export class Notification {
     readonly message: Message;
     readonly time:  Message;
 
-    constructor(userid: User, chatid: Chat, messsage: Message, time: Message, notificationid: number) {
-        this.notificationid = notificationid;
-        this.userid = userid;
-        this.chatid = chatid;
-        this.message = messsage;
-        this.time = time;
+    constructor(notification: {
+        userid: User;
+        chatid: Chat;
+        message: Message;
+        time: Message;
+        notificationid: number;
+    }) {
+        this.notificationid = notification.notificationid;
+        this.userid = notification.userid;
+        this.chatid = notification.chatid;
+        this.message = notification.message;
+        this.time = notification.time;
     }
+    
 
 
 

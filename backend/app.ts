@@ -4,6 +4,7 @@ import cors from "cors";
 import * as bodyParser from "body-parser";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import userRouter from "./controller/user.routes"
 
 const app = express();
 dotenv.config();
@@ -27,6 +28,8 @@ app.use(bodyParser.json());
 app.get("/status", (req, res) => {
   res.json({ message: "Back-end is running..." });
 });
+
+app.use("/user", userRouter);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
