@@ -138,7 +138,7 @@ router.get("/", async (req, res) => {
  *                   type: string
  */
 
-router.get("/registreer", async (req, res) => {
+router.post("/registreer", async (req, res) => {
     const { email, password, firstname, lastname } = req.body;
     try {
         const user = await userService.createUser(new User({firstname, lastname, email, password}))
