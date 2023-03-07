@@ -45,6 +45,7 @@
  *  description: The users managing API
  */
 import express from "express";
+import { User } from "../domain/model/user";
 import userService from "../service/user.service";
 const router = express.Router();
 
@@ -83,5 +84,130 @@ router.get("/", async (req, res) => {
         res.status(500).json({status: 'error', errorMessage: error.message})
     }
 })
+
+/**
+ * @swagger
+ * /user/registreer:
+ *   post:
+ *     summary: Let user register
+ *     tags: [users]
+ *     requestBody:
+ *       description: User details to create an account
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: example@domain.com
+ *               password:
+ *                 type: string
+ *                 example: secret
+ *               firstname:
+ *                 type: string
+ *                 example: John
+ *               lastname:
+ *                 type: string
+ *                 example: Doe
+ *     responses:
+ *       200:
+ *         description: Returns created user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid argument
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 errorMessage:
+ *                   type: string
+ */
+
+router.get("/registreer", async (req, res) => {
+    const { email, password, firstname, lastname } = req.body;
+    try {
+        const user = await userService.createUser(new User({firstname, lastname, email, password}))
+        res.status(200).json({status: "success", user})
+    } catch(error) {
+        res.status(400).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+
+/**
+ * @swagger
+ * /user/login:
+ *   get:
+ *     summary: Let user login
+ *     tags: [users]
+ *     responses:
+ *       200:
+ *         description: Returns user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: User
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       403:
+ *         description: Forbidden
+ */
+router.get("/login", async (req, res) => {
+    const email = req.body.email
+    const password = req.body.password
+    try {
+        const user = await userService.loginUser(email, password)
+        res.status(200).json({status: "success", user})
+    } catch(error) {
+        res.status(403).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+router.get("/update", async (req, res) => {
+    const id = req.body.userid
+    const changed = req.params
+    try {
+        const updatedUser = await userService.updateUser({id: id}, {data: changed})
+        res.status(200).json({status: "success", updatedUser})
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+router.get("/delete", async (req, res) => {
+    try {
+        const deleteUser = await userService.deleteUserById({id: req.body.userid})
+        res.status(200).json({status: "success", deleteUser})
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+
+})
+
+router.get("/find", async (req, res) => {
+    try {
+        const allUsers = await userService.getAllUsersByName(req.body.name)
+        res.status(200).json({status: "success", allUsers})
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+
 
 export default router

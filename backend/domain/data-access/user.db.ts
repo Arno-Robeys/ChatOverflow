@@ -11,8 +11,17 @@ const getAllUsers = async (): Promise<User[]> => {;
   return users.map((user) => UserMapper.toDomain(user));
 }
 
+const getAllUsersByName = async ({name}: {name: string}): Promise<User[]> => {
+  const users = await database.user.findMany({where: {OR: [{firstname: name},{lastname: name},{nickname: name}]}})
+  return users.map((user) => UserMapper.toDomain(user));
+}
+
 const getUserById = async ({id}: {id: number}): Promise<User> => {
   return UserMapper.toDomain(await database.user.findUnique({ where: { userid: id } }));
+}
+
+const getUserByEmail = async ({email}: {email: string}): Promise<User> => {
+  return UserMapper.toDomain(await database.user.findUnique({ where: { email: email } }));
 }
 
 const deleteUserById = async ({id}: {id: number}): Promise<boolean> => {
@@ -29,6 +38,8 @@ export default {
   createUser,
   getAllUsers,
   getUserById,
+  getUserByEmail,
+  getAllUsersByName,
   deleteUserById,
   updateUser
 };

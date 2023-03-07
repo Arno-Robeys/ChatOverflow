@@ -1,7 +1,7 @@
 import { User } from "./user";
 
 export class Profile {
-    readonly userid?: User;
+    readonly userid: number;
     readonly description?: string;
     readonly avatar?: string;
     readonly work?: string;
@@ -11,7 +11,7 @@ export class Profile {
     readonly tags?: string;
 
     constructor(user: {
-        userid: User;
+        userid: number;
         description?: string;
         avatar?: string;
         work?: string;
