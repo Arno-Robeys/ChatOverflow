@@ -1,5 +1,6 @@
 import { User } from "./user";
 
+
 export class Chat {
     readonly chatid: number;
     readonly users: User[];

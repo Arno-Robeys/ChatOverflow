@@ -1,0 +1,4 @@
+{"prisma": {
+    "schema": "backend/domain/data-access/prisma/schema.prisma"
+  }
+}

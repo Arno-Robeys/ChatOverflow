@@ -4,23 +4,26 @@ import { Message } from "./message";
 
 export class Notification {
     readonly notificationid: number;
-    readonly userid: User;
-    readonly chatid: Chat;
+    readonly userid: number;
+    readonly chatid: number;
     readonly message: Message;
-    readonly time:  Message;
+    readonly time: Date;
+    readonly read: boolean;
 
     constructor(notification: {
-        userid: User;
-        chatid: Chat;
+        userid: number;
+        chatid: number;
         message: Message;
-        time: Message;
+        time: Date;
         notificationid: number;
+        read: boolean;
     }) {
         this.notificationid = notification.notificationid;
         this.userid = notification.userid;
         this.chatid = notification.chatid;
         this.message = notification.message;
         this.time = notification.time;
+        this.read = notification.read;
     }
     
 
