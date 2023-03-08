@@ -8,11 +8,14 @@ const createProfile = async (profile: Profile): Promise<Profile> => {
 
 const getAllProfiles = async (): Promise<Profile[]> => {;
     const profiles = await database.profile.findMany()
+    if(!profiles) throw new Error("No profiles found");
     return profiles.map((profile) => ProfileMapper.toDomain(profile));
 }
 
 const getProfileById = async ({id}: {id: number}): Promise<Profile> => {
-    return ProfileMapper.toDomain(await database.profile.findUnique({ where: { userid: id } }));
+    const profile = await database.profile.findUnique({ where: { userid: id } });
+    if(!profile) throw new Error("Profile not found");
+    return ProfileMapper.toDomain(profile);
 }
 
 const updateProfile = async ({ id }: { id: number },{ data }: { data: Partial<Profile> }): Promise<Profile> => {

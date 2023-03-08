@@ -24,8 +24,8 @@ const deleteProfileById = async ({id}: {id: string}): Promise<boolean> => {
 }
 
 const updateProfile = async ({ id }: { id: string },{ data }: { data: Partial<Profile> }): Promise<Profile> => {
-    if(!id) throw new Error("A profile id must be provided")
-    if(isNaN(Number(id))) throw new Error("A profile id must be a number")
+    if(!id) throw new Error("A user id must be provided")
+    if(isNaN(Number(id))) throw new Error("A user id must be a number")
     if(!data) throw new Error("A profile data must be provided")
     return profileDB.updateProfile({id: parseInt(id)}, {data});
 }

@@ -81,6 +81,16 @@ router.get("/", async (req, res) => {
  *   post:
  *     summary: Create profile
  *     tags: [Profiles]
+ *     requestBody:
+ *       description: User create their profile
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userid:
+ *                 type: integer
+ *                 example: 1
  *     responses:
  *       200:
  *         description: Returns created profile
@@ -109,6 +119,12 @@ router.post("/createprofile", async (req, res) => {
  *   get:
  *     summary: Returns profile by id
  *     tags: [Profiles]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: profile by id
@@ -136,6 +152,12 @@ router.get("/:id", async (req, res) => {
  *   delete:
  *     summary: Returns if profile has been deleted
  *     tags: [Profiles]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: delete profile by id
@@ -207,9 +229,9 @@ router.delete("/delete/:id", async (req, res) => {
  *         description: Internal Server Error
  */
 router.put("/update", async (req, res) => {
-    const {id, ...rest} = req.body;
+    const {userid, ...rest} = req.body;
     try {
-        const profile = await profileService.updateProfile(id, rest);
+        const profile = await profileService.updateProfile({id: userid}, {data: rest});
         res.status(200).json(profile)
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})
