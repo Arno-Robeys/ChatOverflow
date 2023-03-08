@@ -11,11 +11,29 @@ const getAllProfiles = async (): Promise<Profile[]> => {
     return profileDB.getAllProfiles();
 };
 
-const getProfileById = async ({id}: {id: number}): Promise<Profile> => {
-    return profileDB.getProfileById({id: id});
+const getProfileById = async ({id}: {id: string}): Promise<Profile> => {
+    if(!id) throw new Error("A profile id must be provided")
+    if(isNaN(Number(id))) throw new Error("A profile id must be a number")
+    return profileDB.getProfileById({id: parseInt(id)});
+}
+
+const deleteProfileById = async ({id}: {id: string}): Promise<boolean> => {
+    if(!id) throw new Error("A profile id must be provided")
+    if(isNaN(Number(id))) throw new Error("A profile id must be a number")
+    return profileDB.deleteProfileById({id: parseInt(id)});
+}
+
+const updateProfile = async ({ id }: { id: string },{ data }: { data: Partial<Profile> }): Promise<Profile> => {
+    if(!id) throw new Error("A profile id must be provided")
+    if(isNaN(Number(id))) throw new Error("A profile id must be a number")
+    if(!data) throw new Error("A profile data must be provided")
+    return profileDB.updateProfile({id: parseInt(id)}, {data});
 }
 
 export default {
     createProfile,
-    getAllProfiles
+    getAllProfiles,
+    deleteProfileById,
+    updateProfile,
+    getProfileById
 }
