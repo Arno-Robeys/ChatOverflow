@@ -7,15 +7,14 @@ export class NotificationMapper {
         return new Notification({
             userid: prismaNotification.userid,
             chatid: prismaNotification.chatid,
-            message: prismaNotification.message,
+            message: prismaNotification.messageid,
             time: prismaNotification.time,
-            read: prismaNotification.read,
             notificationid: prismaNotification.notificationid
         })
     }
 
     static toPersistence(notification: Notification): Omit<PrismaNotification,'notificationid'> {
-        return { userid: notification.userid, chatid: notification.chatid ,message: notification.message, time: notification.time, read: notification.read, notificationid: notification.notificationid }
+        return { userid: notification.userid, chatid: notification.chatid, messageid: notification.message, time: notification.time }
     }
 
 }

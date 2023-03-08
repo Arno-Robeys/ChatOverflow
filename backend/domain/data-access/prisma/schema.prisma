@@ -12,29 +12,33 @@ datasource db {
 
 model Chat {
   chatid       Int            @id @default(autoincrement())
-  users        User[]
-  Message      Message[]
-  Notification Notification[]
+  users        User[]         @relation("ChatToUser")
+  Message      Message[]     
+  Notification Notification[] 
 }
 
 model Message {
-  messageid Int      @id @default(autoincrement())
-  chatid    Int
-  userid    Int
-  message   String
-  time      DateTime @default(now())
-  read      Boolean  @default(false)
-  chat      Chat     @relation(fields: [chatid], references: [chatid])
-  user      User     @relation(fields: [userid], references: [userid])
+  messageid    Int            @id @default(autoincrement())
+  chatid       Int
+  userid       Int
+  message      String
+  time         DateTime       @default(now())
+  read         Boolean        @default(false)
+  chat         Chat           @relation(fields: [chatid], references: [chatid])
+  user         User           @relation(fields: [userid], references: [userid])
+  Notification Notification[]
 }
 
 model Notification {
-  notificationid Int  @id @default(autoincrement())
+  notificationid Int      @id @default(autoincrement())
   userid         Int
   chatid         Int
-  user           User @relation(fields: [userid], references: [userid])
-  chat           Chat @relation(fields: [chatid], references: [chatid])
-}
+  messageid      Int
+  time           DateTime @default(now())
+  user           User     @relation(fields: [userid], references: [userid])
+  chat           Chat     @relation(fields: [chatid], references: [chatid])
+  message        Message  @relation(fields: [messageid], references: [messageid])
+  }
 
 model Profile {
   userid      Int     @unique
@@ -55,7 +59,7 @@ model User {
   email         String         @unique
   password      String
   nickname      String?
-  chats         Chat[]
+  chats         Chat[]        @relation("ChatToUser")
   notifications Notification[]
   profile       Profile?
   Message       Message[]

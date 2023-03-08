@@ -5,6 +5,7 @@ import * as bodyParser from "body-parser";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import userRouter from "./controller/user.routes"
+import profileRouter from "./controller/profile.routes"
 
 const app = express();
 dotenv.config();
@@ -30,6 +31,7 @@ app.get("/status", (req, res) => {
 });
 
 app.use("/user", userRouter);
+app.use("/profile", profileRouter);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
