@@ -1,4 +1,3 @@
-import { User } from "./user";
 
 export class Message {
     readonly chatid: number;

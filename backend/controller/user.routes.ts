@@ -40,9 +40,6 @@
  *         type: integer
  *         format: int64
  *
- * tags:
- *  name: Users
- *  description: The users managing API
  */
 import express from "express";
 import { User } from "../domain/model/user";
@@ -62,7 +59,7 @@ const router = express.Router();
  * /user:
  *   get:
  *     summary: Returns all users
- *     tags: [users]
+ *     tags: [Users]
  *     responses:
  *       200:
  *         description: A list of users
@@ -90,7 +87,7 @@ router.get("/", async (req, res) => {
  * /user/registreer:
  *   post:
  *     summary: Let user register
- *     tags: [users]
+ *     tags: [Users]
  *     requestBody:
  *       description: User details to create an account
  *       required: true
@@ -152,9 +149,23 @@ router.post("/registreer", async (req, res) => {
 /**
  * @swagger
  * /user/login:
- *   get:
+ *   post:
  *     summary: Let user login
- *     tags: [users]
+ *     tags: [Users]
+ *     requestBody:
+ *       description: User details to create an account
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: example@domain.com
+ *               password:
+ *                 type: string
+ *                 example: secret
  *     responses:
  *       200:
  *         description: Returns user
@@ -167,7 +178,7 @@ router.post("/registreer", async (req, res) => {
  *       403:
  *         description: Forbidden
  */
-router.get("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
     const email = req.body.email
     const password = req.body.password
     try {
@@ -178,9 +189,50 @@ router.get("/login", async (req, res) => {
     }
 })
 
-router.get("/update", async (req, res) => {
+/**
+ * @swagger
+ * /user/update:
+ *   put:
+ *     summary: Let user update
+ *     tags: [Users]
+ *     requestBody:
+ *       description: User updates their details
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userid:
+ *                 type: integer
+ *                 example: 1
+ *               firstname:
+ *                 type: string
+ *                 example: Bert
+ *               lastname:
+ *                 type: string
+ *                 example: Ernie
+ *               nickname:
+ *                 type: string
+ *                 example: Bertie
+ *               password:
+ *                 type: string
+ *                 example: secret
+ *     responses:
+ *       200:
+ *         description: Returns updated user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: User
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal Server Error
+ */
+router.put("/update", async (req, res) => {
     const id = req.body.userid
-    const changed = req.params
+    const changed = req.body
     try {
         const updatedUser = await userService.updateUser({id: id}, {data: changed})
         res.status(200).json({status: "success", updatedUser})
@@ -189,9 +241,33 @@ router.get("/update", async (req, res) => {
     }
 })
 
-router.get("/delete", async (req, res) => {
+/**
+ * @swagger
+ * /user/delete/{id}:
+ *   delete:
+ *     summary: Delete user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Returns deleted user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: User
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal Server Error
+ */
+router.delete("/delete/:id", async (req, res) => {
     try {
-        const deleteUser = await userService.deleteUserById({id: req.body.userid})
+        const deleteUser = await userService.deleteUserById({id: req.params.id})
         res.status(200).json({status: "success", deleteUser})
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})
@@ -199,9 +275,33 @@ router.get("/delete", async (req, res) => {
 
 })
 
-router.get("/find", async (req, res) => {
+/**
+* @swagger
+ * /user/find/{name}:
+ *   get:
+ *     summary: Get users with given name
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A list of users with given name
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/find/:name", async (req, res) => {
     try {
-        const allUsers = await userService.getAllUsersByName(req.body.name)
+        const allUsers = (await userService.getAllUsersByName(req.params.name))
         res.status(200).json({status: "success", allUsers})
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})

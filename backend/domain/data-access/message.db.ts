@@ -3,7 +3,7 @@ import database from './prisma/database';
 import { MessageMapper } from './message.mapper';
 
 const createMessage = async (message: Message): Promise<Message> => {
-    return MessageMapper.toDomain(await database.message.create({data : MessageMapper.toPersistence(message)}));
+    return ;
 };
 
 const getAllMessages = async (): Promise<Message[]> => {
