@@ -14,11 +14,14 @@ const getAllMessages = async (): Promise<Message[]> => {
 
 const getAllMessagesByChatId = async ({chatid}: {chatid: number}): Promise<Message[]> => {
     const messages = await database.message.findMany({where: {chatid: chatid}})
+    if(!messages) throw new Error("No messages found");
     return messages.map((message) => MessageMapper.toDomain(message));
 }
 
 const getMessageById = async ({id}: {id: number}): Promise<Message> => {
-    return MessageMapper.toDomain(await database.message.findUnique({ where: { messageid: id } }));
+    const message = await database.message.findUnique({ where: { messageid: id } });
+    if(!message) throw new Error("No message found");
+    return MessageMapper.toDomain(message);
 }
 
 const deleteMessageById = async ({id}: {id: number}): Promise<boolean> => {

@@ -252,7 +252,7 @@ router.put("/update", async (req, res) => {
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: Returns deleted user

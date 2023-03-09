@@ -41,9 +41,11 @@ const loginUser = async (email: string, password: string): Promise<User> => {
 const deleteUserById = async ({id}: {id: string}): Promise<boolean> => {
     if(Number.isNaN(Number(id))) throw new Error('Id must be numeric');
 
-    const userDelete = await userDB.deleteUserById({id: parseInt(id)});
-
-    return userDelete
+    try {
+        return await userDB.deleteUserById({id: parseInt(id)});
+    } catch(err) {
+        throw new Error('User could not be deleted');
+    }
 };
   
 const updateUser = async ({ id }: { id: string },{ data }: { data: Partial<User> }): Promise<User> => {
