@@ -13,6 +13,12 @@ const getAllMessages = async (): Promise<Message[]> => {
     return messageDB.getAllMessages();
 }
 
+const getAllMessagesByChatId = async (chat: string): Promise<Message[]> => {
+    if(!chat) throw new Error("A chat must be provided")
+    if(Number.isNaN(Number(chat))) throw new Error('Chat must be numeric');
+    return messageDB.getAllMessagesByChatId({chatid: parseInt(chat)});
+}
+
 const getMessageById = async (messageid: string): Promise<Message> => {
     if(Number.isNaN(Number(messageid))) throw new Error('Id must be numeric');
 
@@ -25,10 +31,11 @@ const getMessageById = async (messageid: string): Promise<Message> => {
 const deleteMessageById = async ({id}: {id: string}): Promise<boolean> => {
     if(Number.isNaN(Number(id))) throw new Error('Id must be numeric');
 
-    const messageDelete = await messageDB.deleteMessageById({id: parseInt(id)});
-
-    if(!messageDelete) throw new Error("No message found to delete")
-    return messageDelete
+    try {
+        return await messageDB.deleteMessageById({id: parseInt(id)});
+    } catch(err) {
+        return false;
+    }
 }
 
 const updateMessage = async ({ id }: { id: string },{ data }: { data: Partial<Message> }): Promise<Message> => {    
@@ -42,5 +49,6 @@ export default {
     getAllMessages,
     getMessageById,
     deleteMessageById,
+    getAllMessagesByChatId,
     updateMessage,
 };

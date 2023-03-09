@@ -8,7 +8,8 @@ export class MessageMapper {
             message: prismaMessage.message,
             time: prismaMessage.time,
             read: prismaMessage.read,
-            chatid: prismaMessage.chatid
+            chatid: prismaMessage.chatid,
+            messageid: prismaMessage.messageid
         })
             
     }

@@ -20,7 +20,12 @@ const getProfileById = async ({id}: {id: string}): Promise<Profile> => {
 const deleteProfileById = async ({id}: {id: string}): Promise<boolean> => {
     if(!id) throw new Error("A profile id must be provided")
     if(isNaN(Number(id))) throw new Error("A profile id must be a number")
-    return profileDB.deleteProfileById({id: parseInt(id)});
+    try {
+        const deleteProfile = await profileDB.getProfileById({id: parseInt(id)});
+        return true;
+    } catch(err) {
+        throw new Error("A profile with that id does not exist")
+    }
 }
 
 const updateProfile = async ({ id }: { id: string },{ data }: { data: Partial<Profile> }): Promise<Profile> => {
