@@ -8,6 +8,7 @@ import userRouter from "./controller/user.routes"
 import profileRouter from "./controller/profile.routes"
 import messageRouter from "./controller/message.routes"
 import notificationRouter from "./controller/notification.routes"
+import chatRouter from "./controller/chat.routes"
 
 const app = express();
 dotenv.config();
@@ -36,6 +37,7 @@ app.use("/user", userRouter);
 app.use("/profile", profileRouter);
 app.use("/message", messageRouter);
 app.use("/notification", notificationRouter);
+app.use("/chat", chatRouter);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

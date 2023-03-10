@@ -1,5 +1,4 @@
 import { Message } from "../domain/model/message";
-import { Chat } from "../domain/model/chat";
 import messageDB from "../domain/data-access/message.db";
 
 

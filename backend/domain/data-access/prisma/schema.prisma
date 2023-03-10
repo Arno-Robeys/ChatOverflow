@@ -42,8 +42,8 @@ model Notification {
 
 model Profile {
   userid      Int     @unique
-  description String?
-  avatar      String?
+  description String? 
+  avatar      String? 
   work        String?
   hobby       String?
   rating      String?

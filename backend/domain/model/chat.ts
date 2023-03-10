@@ -6,8 +6,8 @@ export class Chat {
     readonly users: User[];
 
     constructor(chatUsers: {
-        users: User[];
         chatid: number;
+        users?: User[];
     }) {
         this.chatid = chatUsers.chatid;
         this.users = chatUsers.users;

@@ -83,6 +83,105 @@ router.get("/", async (req, res) => {
 })
 
 /**
+* @swagger
+ * /user/{id}:
+ *   get:
+ *     summary: Get user by id
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: An user with given id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/:id", async (req, res) => {
+    try {
+        const user = (await userService.getUserById(req.params.id))
+        res.status(200).json(user)
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+/**
+* @swagger
+ * /user/{id}/profile:
+ *   get:
+ *     summary: Get user and profile by id
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: An user and their profile with given id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/:id/profile", async (req, res) => {
+    try {
+        const userProfile = (await userService.getUserAndProfileById(req.params.id))
+        res.status(200).json(userProfile)
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+/**
+* @swagger
+ * /user/find/{name}:
+ *   get:
+ *     summary: Get users with given name
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A list of users with given name
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/find/:name", async (req, res) => {
+    try {
+        const allUsers = (await userService.getAllUsersByName(req.params.name))
+        res.status(200).json({status: "success", allUsers})
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+/**
  * @swagger
  * /user/registreer:
  *   post:
@@ -273,39 +372,6 @@ router.delete("/delete/:id", async (req, res) => {
         res.status(500).json({status: 'error', errorMessage: error.message})
     }
 
-})
-
-/**
-* @swagger
- * /user/find/{name}:
- *   get:
- *     summary: Get users with given name
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: name
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: A list of users with given name
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/User'
- *       500:
- *         description: Internal server error
- */
-router.get("/find/:name", async (req, res) => {
-    try {
-        const allUsers = (await userService.getAllUsersByName(req.params.name))
-        res.status(200).json({status: "success", allUsers})
-    } catch(error) {
-        res.status(500).json({status: 'error', errorMessage: error.message})
-    }
 })
 
 

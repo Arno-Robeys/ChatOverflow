@@ -54,6 +54,11 @@ const updateUser = async ({ id }: { id: string },{ data }: { data: Partial<User>
     return userDB.updateUser({id: parseInt(id)}, { data: data });
 };
 
+const getUserAndProfileById = async (id: string): Promise<User> => {
+    if(Number.isNaN(Number(id))) throw new Error('Id must be numeric');
+    return userDB.getUserAndProfileById({id: parseInt(id)});
+}
+
 
 
 
@@ -65,4 +70,5 @@ export default {
     getAllUsersByName,
     deleteUserById,
     updateUser,
+    getUserAndProfileById
 };
