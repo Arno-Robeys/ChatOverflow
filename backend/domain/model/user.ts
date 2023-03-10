@@ -1,3 +1,6 @@
+import { Chat } from "./chat";
+import { Profile } from "./profile";
+
 export class User {
     readonly userid?: number;
     readonly firstname: string;
@@ -5,6 +8,8 @@ export class User {
     readonly email: string;
     readonly password: string;
     readonly nickname?: string;
+    readonly profile?: Profile;
+    readonly chats?: Chat;
 
     constructor(user: {
         firstname: string;
@@ -13,6 +18,8 @@ export class User {
         password: string;
         userid?: number;
         nickname?: string;
+        profile?: Profile;
+        chats?: Chat;
     }) {
         this.userid = user.userid;
         this.firstname = user.firstname;
@@ -20,6 +27,8 @@ export class User {
         this.email = user.email;
         this.password = user.password;
         this.nickname = user.nickname;
+        this.profile = user.profile;
+        this.chats = user.chats;
     }
 
  

@@ -1,8 +1,10 @@
 import { User as PrismaUser } from "@prisma/client";
 import { User } from "../model/user";
+import { Profile as PrismaProfile } from "@prisma/client";
+import { ProfileMapper } from "./profile.mapper";
 
 export class UserMapper {
-    static toDomain(prismaUser: PrismaUser): User {
+    static toDomain(prismaUser: PrismaUser & { profile?: PrismaProfile}): User {
         return new User({
             firstname: prismaUser.firstname,
             lastname: prismaUser.lastname,
@@ -10,6 +12,7 @@ export class UserMapper {
             password: prismaUser.password,
             userid: prismaUser.userid,
             nickname: prismaUser.nickname,
+            profile: prismaUser.profile ? ProfileMapper.toDomain(prismaUser.profile) : undefined
         })
     }
 

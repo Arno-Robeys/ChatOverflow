@@ -1,6 +1,8 @@
 import { User } from '../model/user';
 import database from '../data-access/prisma/database';
 import { UserMapper } from './user.mapper';
+import { ProfileMapper } from './profile.mapper';
+import { Profile } from '../model/profile';
 
 const createUser = async (user: User): Promise<User> => {
   return UserMapper.toDomain(await database.user.create({data : UserMapper.toPersistence(user)}));
@@ -20,6 +22,12 @@ const getAllUsersByName = async ({name}: {name: string}): Promise<User[]> => {
 
 const getUserById = async ({id}: {id: number}): Promise<User> => {
   const user = await database.user.findUnique({ where: { userid: id } });
+  if(!user) throw new Error("User not found");
+  return UserMapper.toDomain(user);
+}
+
+const getUserAndProfileById = async ({id}: {id: number}): Promise<User> => {
+  const user = await database.user.findUnique({ where: { userid: id }, include: { profile: true } });
   if(!user) throw new Error("User not found");
   return UserMapper.toDomain(user);
 }
@@ -47,6 +55,7 @@ export default {
   getUserById,
   getUserByEmail,
   deleteUserById,
-  updateUser
+  updateUser,
+  getUserAndProfileById
 };
 

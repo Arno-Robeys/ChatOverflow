@@ -26,8 +26,7 @@ const getAllNotificationsByUserId = async ({userid}: {userid: number}): Promise<
 
 const deleteNotificationById = async ({id}: {id: number}): Promise<boolean> => {
     try {
-        await database.notification.findUnique({ where: { notificationid: id } });
-        return true;
+        return Boolean(await database.notification.delete({ where: { notificationid: id } }));
     } catch (error) {
         throw new Error("No notification found");
     }
