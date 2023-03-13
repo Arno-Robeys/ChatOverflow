@@ -23,10 +23,22 @@ const deleteNotificationById = async (id: string): Promise<Boolean> => {
     return notificationDB.deleteNotificationById({id: parseInt(id)});
 };
 
+// update notification with id as parameter when user change message body
+const updateNotificationById = async (id: string, messageid: string): Promise<Notification> => {
+    if(!id) throw new Error("A notification id must be provided")
+    if(Number.isNaN(Number(id))) throw new Error("A notification id must be a number");
+    if(!messageid) throw new Error("A message id must be provided")
+    if(Number.isNaN(Number(messageid))) throw new Error("A message id must be a number");
+    return notificationDB.updateNotificationById({id: parseInt(id), messageid: parseInt(messageid)});
+};
+
+
+
 
 export default {
     createNotification,
     getAllNotifications,
     deleteNotificationById,
-    getAllNotificationsByUserId
+    getAllNotificationsByUserId,
+    updateNotificationById
 }

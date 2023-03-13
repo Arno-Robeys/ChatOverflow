@@ -1,4 +1,1 @@
-{"prisma": {
-    "schema": "backend/domain/data-access/prisma/schema.prisma"
-  }
-}
+{"prisma":{"schema":"backend/domain/data-access/prisma/schema.prisma"},"dependencies":{"express":"^4.18.2"}}

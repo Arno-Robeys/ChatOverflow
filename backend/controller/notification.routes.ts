@@ -180,6 +180,60 @@ router.delete("/delete/:id", async (req, res) => {
         }
 })
 
+// swagger documentation for update notification routes, when a message is updated
+
+/**
+ * @swagger
+ * /notification/update/{id}:
+ *   put:
+ *     summary: Update notification
+ *     tags: 
+ *       - Notifications
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       description: A new notification to be created
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userid:
+ *                 type: integer
+ *                 example: 1
+ *               chatid:
+ *                 type: integer
+ *                 example: 1
+ *               messageid:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Returns updated notification
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Notification'
+ *       500:
+ *         description: Internal server error
+ */ 
+// update notification with id as parameter when user change message
+router.put("/update/:id", async (req, res) => {
+    try {
+        const updatedNotification = await notificationService.updateNotificationById(req.params.id, req.body);
+        res.status(200).json(updatedNotification)
+        } catch(error) {
+            res.status(500).json({status: 'error', errorMessage: error.message})
+        }
+})
+
 
 
 export default router;

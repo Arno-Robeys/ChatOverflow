@@ -32,11 +32,26 @@ const deleteNotificationById = async ({id}: {id: number}): Promise<boolean> => {
     }
 }
 
+// update notification with id as parameter when user change message body
+const updateNotificationById = async ({id, messageid}: {id: number, messageid: number}): Promise<Notification> => {
+    const notification = await database.notification.update({
+        where: { notificationid: id },
+        data: { messageid: messageid }
+    });
+    if(!notification) throw new Error("No notification found");
+    return NotificationMapper.toDomain(notification);
+}
+
+
+
+
+
 
 export default {
     createNotification,
     getAllNotifications,
     getNotificationById,
     getAllNotificationsByUserId,
-    deleteNotificationById
+    deleteNotificationById,
+    updateNotificationById
 }
