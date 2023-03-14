@@ -75,49 +75,6 @@ router.get("/", async (req, res) => {
 
 /**
  * @swagger
- * /message/send:
- *   post:
- *     summary: Send a message
- *     tags: [Messages]
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userid:
- *                 type: integer
- *                 example: 1
- *               chatid:
- *                 type: integer
- *                 example: 1
- *               message:
- *                 type: string
- *                 example: Hey, how are you?
- *     responses:
- *       200:
- *         description: A message
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Message'
- *       500:
- *         description: Internal server error
- */
-router.post("/send", async (req, res) => {
-    const data = req.body
-    try {
-        const messages = await messageService.createMessage(data);
-        res.status(200).json(messages)
-    } catch(error) {
-        res.status(500).json({status: 'error', errorMessage: error.message})
-    }
-})
-
-/**
- * @swagger
  * /message/chat/{chatid}:
  *   get:
  *     summary: Returns all messages from a chat
@@ -178,6 +135,49 @@ router.get("/:messageid", async (req, res) => {
     const messageid = req.params.messageid
     try {
         const messages = await messageService.getMessageById(messageid);
+        res.status(200).json(messages)
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+/**
+ * @swagger
+ * /message/send:
+ *   post:
+ *     summary: Send a message
+ *     tags: [Messages]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userid:
+ *                 type: integer
+ *                 example: 1
+ *               chatid:
+ *                 type: integer
+ *                 example: 1
+ *               message:
+ *                 type: string
+ *                 example: Hey, how are you?
+ *     responses:
+ *       200:
+ *         description: A message
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Message'
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/send", async (req, res) => {
+    const data = req.body
+    try {
+        const messages = await messageService.createMessage(data);
         res.status(200).json(messages)
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})

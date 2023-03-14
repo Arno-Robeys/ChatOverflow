@@ -1,23 +1,24 @@
+import { Message } from './message';
 
 export class Notification {
     readonly notificationid: number;
     readonly userid: number;
     readonly chatid: number;
     readonly messageid: number;
-    readonly time: Date;
+    readonly message?: Message;
 
     constructor(notification: {
         userid: number;
         chatid: number;
         messageid: number;
-        time: Date;
         notificationid: number;
+        message?: Message;
     }) {
         this.notificationid = notification.notificationid;
         this.userid = notification.userid;
         this.chatid = notification.chatid;
         this.messageid = notification.messageid;
-        this.time = notification.time;
+        this.message = notification.message;
     }
     
 

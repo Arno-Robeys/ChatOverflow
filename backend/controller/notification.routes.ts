@@ -6,7 +6,7 @@
  *       type: object
  *       required:
  *         - userid
- *         - message
+ *         - messageid
  *         - time
  *         - chatid
  *
@@ -20,9 +20,9 @@
  *         chatid:
  *           type: integer
  *           description: The id of the chat the message belongs to.
- *         message:
- *           type: string
- *           description: The content of the message.
+ *         messageid:
+ *           type: integer
+ *           description: The id of the message.
  *         time:
  *           type: string
  *           description: The time the message was sent.
@@ -89,7 +89,7 @@ router.get("/", async (req, res) => {
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Profile'
+ *                 $ref: '#/components/schemas/Notification'
  *       500:
  *         description: Internal server error
  */
@@ -149,6 +149,47 @@ router.post("/createnotification", async (req, res) => {
 
 /**
  * @swagger
+ * /notification/update/{id}:
+ *   put:
+ *     summary: Update notification
+ *     tags: 
+ *       - Notifications
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: userid
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Returns updated notification
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Notification'
+ *       500:
+ *         description: Internal server error
+ */ 
+
+//Update notification is niet nodig, maar voor de volledigheid toch toegevoegd (CRUD Operations)
+router.put("/update/:id", async (req, res) => {
+    try {
+        const updatedNotification = await notificationService.updateNotificationById(req.params.id, String(req.query.userid));
+        res.status(200).json(updatedNotification)
+        } catch(error) {
+            res.status(500).json({status: 'error', errorMessage: error.message})
+        }
+})
+
+/**
+ * @swagger
  * /notification/delete/{id}:
  *   delete:
  *     summary: Returns if notification has been deleted
@@ -167,7 +208,7 @@ router.post("/createnotification", async (req, res) => {
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Profile'
+ *                 $ref: '#/components/schemas/Notification'
  *       500:
  *         description: Internal server error
  */
@@ -179,61 +220,6 @@ router.delete("/delete/:id", async (req, res) => {
             res.status(500).json({status: 'error', errorMessage: error.message})
         }
 })
-
-// swagger documentation for update notification routes, when a message is updated
-
-/**
- * @swagger
- * /notification/update/{id}:
- *   put:
- *     summary: Update notification
- *     tags: 
- *       - Notifications
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       description: A new notification to be created
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userid:
- *                 type: integer
- *                 example: 1
- *               chatid:
- *                 type: integer
- *                 example: 1
- *               messageid:
- *                 type: integer
- *                 example: 1
- *     responses:
- *       200:
- *         description: Returns updated notification
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Notification'
- *       500:
- *         description: Internal server error
- */ 
-// update notification with id as parameter when user change message
-router.put("/update/:id", async (req, res) => {
-    try {
-        const updatedNotification = await notificationService.updateNotificationById(req.params.id, req.body);
-        res.status(200).json(updatedNotification)
-        } catch(error) {
-            res.status(500).json({status: 'error', errorMessage: error.message})
-        }
-})
-
 
 
 export default router;

@@ -44,7 +44,7 @@ const router = express.Router();
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Notification'
+ *                 $ref: '#/components/schemas/Chat'
  *       500:
  *         description: Internal server error
  */
@@ -52,6 +52,72 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     try {
         const messages = await chatService.getAllChats();
+        res.status(200).json(messages)
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+/**
+ * @swagger
+ * /chat/{id}:
+ *   get:
+ *     summary: Returns chat by id
+ *     tags: [Chats]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: a chat
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Chat'
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/:id", async (req, res) => {
+    try {
+        const messages = await chatService.getChatById(req.params.id);
+        res.status(200).json(messages)
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+/**
+ * @swagger
+ * /chat/user/{id}:
+ *   get:
+ *     summary: Returns all chats of user
+ *     tags: [Chats]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of chats of user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Chat'
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/user/:id", async (req, res) => {
+    try {
+        const messages = await chatService.getAllChatsByUserId(req.params.id);
         res.status(200).json(messages)
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})
@@ -85,7 +151,7 @@ router.get("/", async (req, res) => {
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Notification'
+ *                 $ref: '#/components/schemas/Chat'
  *       500:
  *         description: Internal server error
  */
@@ -98,5 +164,116 @@ router.post("/create", async (req, res) => {
         res.status(500).json({status: 'error', errorMessage: error.message})
     }
 })
+
+/**
+ * @swagger
+ * /chat/adduser:
+ *   put:
+ *     summary: Add user to chat
+ *     tags: [Chats]
+ *     parameters:
+ *       - in: query
+ *         name: chatid
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: userid
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A chat with added user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Chat'
+ *       500:
+ *         description: Internal server error
+ */
+router.put("/adduser", async (req, res) => {
+    try {
+        const messages = await chatService.addUserToChat(String(req.query.chatid), String(req.query.userid));
+        res.status(200).json(messages)
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+/**
+ * @swagger
+ * /chat/removeuser:
+ *   put:
+ *     summary: Remove user to chat
+ *     tags: [Chats]
+ *     parameters:
+ *       - in: query
+ *         name: chatid
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: userid
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A chat without removed user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Chat'
+ *       500:
+ *         description: Internal server error
+ */
+router.put("/removeuser", async (req, res) => {
+    try {
+        const messages = await chatService.removeUserFromChat(String(req.query.chatid), String(req.query.userid));
+        res.status(200).json(messages)
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+/**
+ * @swagger
+ * /chat/delete/{id}:
+ *   delete:
+ *     summary: Remove chat by id
+ *     tags: [Chats]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: If chat was deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Chat'
+ *       500:
+ *         description: Internal server error
+ */
+router.delete("/delete/:id", async (req, res) => {
+    try {
+        const messages = await chatService.deleteChat(req.params.id);
+        res.status(200).json(messages)
+    } catch(error) {
+        res.status(500).json({status: 'error', errorMessage: error.message})
+    }
+})
+
+
 
 export default router;
