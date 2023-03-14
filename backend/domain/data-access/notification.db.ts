@@ -19,7 +19,7 @@ const getNotificationById = async ({id}: {id: number}): Promise<Notification> =>
 }
 
 const getAllNotificationsByUserId = async ({userid}: {userid: number}): Promise<Notification[]> => {
-    const notifications = await database.notification.findMany({where: {userid: userid}})
+    const notifications = await database.notification.findMany({where: {userid: userid}, include: {message: true}})
     if(!notifications) throw new Error("No notifications found");
     return notifications.map((notification) => NotificationMapper.toDomain(notification));
 }
@@ -33,10 +33,10 @@ const deleteNotificationById = async ({id}: {id: number}): Promise<boolean> => {
 }
 
 // update notification with id as parameter when user change message body
-const updateNotificationById = async ({id, messageid}: {id: number, messageid: number}): Promise<Notification> => {
+const updateNotificationById = async ({id, userid}: {id: number, userid: number}): Promise<Notification> => {
     const notification = await database.notification.update({
         where: { notificationid: id },
-        data: { messageid: messageid }
+        data: { userid: userid }
     });
     if(!notification) throw new Error("No notification found");
     return NotificationMapper.toDomain(notification);

@@ -20,7 +20,46 @@ const getAllChats = async (): Promise<Chat[]> => {
     return chatDB.getAllChats();
 };
 
+const getChatById = async (id: string): Promise<Chat> => {
+    if(!id) throw new Error("A chat id must be provided")
+    if(Number.isNaN(Number(id))) throw new Error("A chat id must be a number");
+    return chatDB.getChatById(parseInt(id));
+};
+
+const getAllChatsByUserId = async (userid: string): Promise<Chat[]> => {
+    if(!userid) throw new Error("A user id must be provided")
+    if(Number.isNaN(Number(userid))) throw new Error("A user id must be a number");
+    return chatDB.getAllChatsByUserId(parseInt(userid));
+};
+
+const addUserToChat = async (chatid: string, userid: string): Promise<Chat> => {
+    if(!chatid || !userid) throw new Error("Userid or/and chatid must be provided")
+    if(Number.isNaN(Number(chatid)) || Number.isNaN(Number(userid))) throw new Error("Userid or/and chatid must be numeric");
+    const user = await userDB.getUserById({id: parseInt(userid)});
+    if(!user) throw new Error("User must exist");
+    return chatDB.addUserToChat(parseInt(chatid), user);
+};
+
+const removeUserFromChat = async (chatid: string, userid: string): Promise<Chat> => {
+    if(!chatid || !userid) throw new Error("Userid or/and chatid must be provided")
+    if(Number.isNaN(Number(chatid)) || Number.isNaN(Number(userid))) throw new Error("Userid or/and chatid must be numeric");
+    const user = await userDB.getUserById({id: parseInt(userid)});
+    if(!user) throw new Error("User must exist");
+    return chatDB.removeUserFromChat(parseInt(chatid), user);
+};
+
+const deleteChat = async (id: string): Promise<Boolean> => {
+    if(!id) throw new Error("A chat id must be provided")
+    if(Number.isNaN(Number(id))) throw new Error("A chat id must be a number");
+    return chatDB.deleteChat(parseInt(id));
+};
+
 export default {
     createChat,
-    getAllChats
+    getAllChats,
+    getChatById,
+    addUserToChat,
+    removeUserFromChat,
+    deleteChat,
+    getAllChatsByUserId,
 }

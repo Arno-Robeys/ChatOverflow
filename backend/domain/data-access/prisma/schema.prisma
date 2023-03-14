@@ -34,7 +34,6 @@ model Notification {
   userid         Int
   chatid         Int
   messageid      Int
-  time           DateTime @default(now())
   user           User     @relation(fields: [userid], references: [userid])
   chat           Chat     @relation(fields: [chatid], references: [chatid])
   message        Message  @relation(fields: [messageid], references: [messageid])
