@@ -1,3 +1,3 @@
-const Register: React.FC = () => {
-    return (<h1>Register</h1>)}; 
-    export default Register;
+const Login: React.FC = () => {
+    return (<h1>Login</h1>)}; 
+    export default Login;
