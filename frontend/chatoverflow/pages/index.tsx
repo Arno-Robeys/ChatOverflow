@@ -1,10 +1,3 @@
-
-
-export default function Home() {
-  return (
-    <>
-    <h1>Login</h1>
-    </>
-  
-  )
-}
+const Home: React.FC = () => {
+  return (<h1>Login</h1>)}; 
+  export default Home;
