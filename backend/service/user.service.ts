@@ -1,19 +1,20 @@
 import { User } from '../domain/model/user';
 import userDB from '../domain/data-access/user.db';
 
+const getAllUsers = async (): Promise<User[]> => {
+    return userDB.getAllUsers();
+};
 
 const createUser = async (user: User): Promise<User> => {
-    if(!user) throw new Error("An user must be provided")
+
+    if(!user.firstname || !user.lastname || !user.password) throw new Error("All fields must be provided")
+
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if(!emailRegex.test(user.email)) throw new Error("Email must be valid")
 
     return userDB.createUser(user);
   };
-
-const getAllUsers = async (): Promise<User[]> => {
-    return userDB.getAllUsers();
-};
 
 const getAllUsersByName = async (name: string): Promise<User[]> => {
     if(!name) throw new Error('Name must be provided');

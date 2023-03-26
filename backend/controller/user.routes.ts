@@ -195,18 +195,18 @@ router.get("/find/:name", async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               email:
- *                 type: string
- *                 example: example@domain.com
- *               password:
- *                 type: string
- *                 example: secret
  *               firstname:
  *                 type: string
  *                 example: John
  *               lastname:
  *                 type: string
  *                 example: Doe
+ *               email:
+ *                 type: string
+ *                 example: example@domain.com
+ *               password:
+ *                 type: string
+ *                 example: secret
  *     responses:
  *       200:
  *         description: Returns created user
@@ -235,7 +235,7 @@ router.get("/find/:name", async (req, res) => {
  */
 
 router.post("/registreer", async (req, res) => {
-    const { email, password, firstname, lastname } = req.body;
+    const { firstname, lastname, email, password } = req.body;
     try {
         const user = await userService.createUser(new User({firstname, lastname, email, password}))
         res.status(200).json({status: "success", user})
