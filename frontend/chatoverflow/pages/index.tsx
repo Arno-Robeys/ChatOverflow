@@ -11,7 +11,7 @@ const Home: React.FC = () => {
 
     const { data: session} = useSession();
     const router = useRouter(); 
-    if(session) router.push('/user');
+    if(session) router.push('/hub');
 
 
     const handleSubmit : FormEventHandler<HTMLFormElement> = async (e) => {
@@ -25,12 +25,17 @@ const Home: React.FC = () => {
         });
         
         if (response !== undefined && response.ok) {
-            router.push('/user');
+            router.push('/hub');
         } else {
             setUser({ email: '', password: '' });
             setErrors(["Email or password are incorrect"]);
         }
     };
+
+    // route to settings page
+    const settings = async () => {
+        router.push('/settings');
+    }
 
 
   return (<>
