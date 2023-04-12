@@ -19,7 +19,7 @@ const createUser = async (user: User): Promise<User> => {
 const getAllUsersByName = async (name: string): Promise<User[]> => {
     if(!name) throw new Error('Name must be provided');
     const users = await userDB.getAllUsersByName({name: name});
-    if(!users) throw new Error('No users found');
+    if(!users || users.length === 0) throw new Error('No users found');
     return users;
 }
 

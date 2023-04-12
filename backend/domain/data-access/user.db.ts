@@ -15,7 +15,16 @@ const getAllUsers = async (): Promise<User[]> => {;
 }
 
 const getAllUsersByName = async ({name}: {name: string}): Promise<User[]> => {
-  const users = await database.user.findMany({where: {OR: [{firstname: name},{lastname: name},{nickname: name}]}})
+  const users = await database.user.findMany({
+    where: {
+      OR: [
+        { firstname: { contains: name, mode: "insensitive" } },
+        { lastname: { contains: name, mode: "insensitive" } },
+        { nickname: { contains: name, mode: "insensitive" } },
+        { AND: [
+            { firstname: { contains: name.split(' ')[0], mode: "insensitive" } },
+            { lastname: { contains: name.split(' ')[1], mode: "insensitive" } },
+          ]}]}})
   if(!users) throw new Error("No users found");
   return users.map((user) => UserMapper.toDomain(user));
 }

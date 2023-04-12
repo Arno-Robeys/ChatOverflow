@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import React from 'react'
-import SettingsComponent from './SettingsComponent'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -24,7 +23,7 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <Disclosure as="nav" className="bg-gradient-to-r from-gray-300 to-gray-400">
+    <Disclosure as="nav" className="border-b-4">
       {({ open }) => (
         <>
           <div className="px-2 sm:px-6 lg:px-8">
@@ -90,7 +89,7 @@ const Navbar: React.FC = () => {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="/user/"
+                            href="/user/profile"
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             Your Profile
@@ -100,7 +99,7 @@ const Navbar: React.FC = () => {
                       <Menu.Item>
                         {({ active }) => (
                           <Link
-                            href="/settings"
+                            href="/user/settings"
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             Settings
