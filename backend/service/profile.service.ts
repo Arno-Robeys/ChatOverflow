@@ -21,7 +21,7 @@ const deleteProfileById = async ({id}: {id: string}): Promise<boolean> => {
     if(!id) throw new Error("A profile id must be provided")
     if(isNaN(Number(id))) throw new Error("A profile id must be a number")
     try {
-        const deleteProfile = await profileDB.getProfileById({id: parseInt(id)});
+        const deleteProfile = await profileDB.deleteProfileById({id: parseInt(id)});
         return true;
     } catch(err) {
         throw new Error("A profile with that id does not exist")

@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
 import Chat from "@/components/Chat";
 import SideBar from "@/components/Sidebar";
-import Profile from "@/components/Profile";
 
 
-const ProfilePage: React.FC = () => {
+const ChatPage: React.FC = () => {
 
   const router = useRouter();
   const { id } = router.query;
@@ -18,7 +17,7 @@ const ProfilePage: React.FC = () => {
                     </div>
                     
                     <div className="flex-grow min-w-[415px] max-w-[1820px] w-100 h-100 py-4 pl-4">
-                        <Profile userId={id}/>
+                        <Chat chatId={id as string}/>
                     </div>
                 
             </div>
@@ -26,10 +25,4 @@ const ProfilePage: React.FC = () => {
 };
 
 
-export const getServerSideProps = async (context: { query?: any; }) => {
-  const { userId } = context.query;
-  return userId ? { props: { userId } } : { props: {} };
-};
-
-
-export default ProfilePage;
+export default ChatPage;

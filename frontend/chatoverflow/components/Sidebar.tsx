@@ -59,12 +59,12 @@ const SideBar: React.FC = () => {
                 <div className="divide-y divide-gray-200">
                     {searchResults.map((user) => {
                         return (
-                          <div className='w-full text-left py-2 hover:bg-gray-100'>
-                            <Link key={user.userid} href={`/user/profile?id=${user.userid}`}>
+                          <div key={user.userid} className='w-full text-left py-2 hover:bg-gray-100'>
+                            <Link href={`/user/profile?id=${user.userid}`}>
                                 <div className="flex items-center">
                                     <img className="rounded-full items-start flex-shrink-0 mr-3" width="32" height="32" alt="Marie Zulfikar" />
                                     <div>
-                                    <h4 className="text-sm font-semibold text-gray-900">{user.nickname ? user.nickname : user.firstname + ' ' + user.lastname}</h4>
+                                      <h4 className="text-sm font-semibold text-gray-900">{user.nickname ? user.nickname : user.firstname + ' ' + user.lastname}</h4>
                                     </div>
                                 </div>
                             </Link>

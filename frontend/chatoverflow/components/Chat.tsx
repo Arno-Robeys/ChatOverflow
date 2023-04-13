@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Chat: React.FC = () => {
+const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
   return (
-    <div>Chat</div>
+    <div>Chat with chatid: {chatId}</div>
   )
 }
 

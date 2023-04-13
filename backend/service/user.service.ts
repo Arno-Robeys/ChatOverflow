@@ -1,5 +1,6 @@
 import { User } from '../domain/model/user';
 import userDB from '../domain/data-access/user.db';
+import profileDb from '../domain/data-access/profile.db';
 
 const getAllUsers = async (): Promise<User[]> => {
     return userDB.getAllUsers();
@@ -12,8 +13,7 @@ const createUser = async (user: User): Promise<User> => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if(!emailRegex.test(user.email)) throw new Error("Email must be valid")
-
-    return userDB.createUser(user);
+    return await userDB.createUser(user);
   };
 
 const getAllUsersByName = async (name: string): Promise<User[]> => {
