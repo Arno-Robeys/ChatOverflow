@@ -14,7 +14,7 @@ const userSettings: React.FC = () => {
 
   useEffect(() => {
   (async () => {
-    const response = await fetch(`http://localhost:3000/user/${loggedInUserId}/profile`, {method: 'GET'});
+    const response = await fetch(`http://localhost:3000/user/${loggedInUserId}/profile`);
     var data = await response.json();
 
     if(!data.profile) {
