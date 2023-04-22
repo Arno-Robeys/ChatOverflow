@@ -138,10 +138,10 @@ router.get("/user/:id", async (req, res) => {
  *             type: object
  *             properties:
  *               user1:
- *                 type: Integer
+ *                 type: String
  *                 example: 1
  *               user2:
- *                 type: Integer
+ *                 type: String
  *                 example: 7
  *     responses:
  *       200:

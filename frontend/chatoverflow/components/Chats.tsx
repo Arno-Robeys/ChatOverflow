@@ -29,7 +29,7 @@ const Chats: React.FC = () => {
     }, [])
 
   return (
-    <section className="flex flex-col antialiased bg-gray-50 text-gray-600 min-h-screen">
+    <section className="flex flex-col antialiased bg-gray-50 text-gray-600 h-full">
     <div className="h-full">
             <div className="py-3 px-5">
                 <h3 className="text-xs font-semibold uppercase text-gray-400 mb-1">Chats</h3>

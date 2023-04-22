@@ -9,7 +9,6 @@ export type UserProfile = {
         description: string;
         education: string;
         hobby: string;
-        rating: number;
         tags: string;
         work: string;
     }}
