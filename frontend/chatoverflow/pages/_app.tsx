@@ -14,7 +14,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
   <>
     <SessionProvider session={pageProps.session}>
-    <Toaster />
+      <div className='flex flex-col h-screen'>
+      <Toaster />
       {isPublicPage ? (
           <Component {...pageProps} />
         ) : (
@@ -23,6 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </AuthWrapper>
         )}
+      </div>
     </SessionProvider>
   </>)
 }
