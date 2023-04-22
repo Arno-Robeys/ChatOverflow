@@ -12,6 +12,14 @@ const createChat = async (user1: string, user2: string): Promise<Chat> => {
 
     if(!user1Exists || !user2Exists) throw new Error("Users must exist");
 
+    const chatExists = await chatDB.getAllChatsByUserId(parseInt(user1)).then(chats => {
+        return chats.find(chat => {
+            return chat.users.find(user => user.userid === parseInt(user2));
+        });
+    });
+
+    if(chatExists) return chatExists;
+
     const chatObj: Chat = {chatid: 0, users: [user1Exists, user2Exists] };
     return chatDB.createChat(chatObj);
 };

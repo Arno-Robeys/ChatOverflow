@@ -51,7 +51,8 @@ const deleteUserById = async ({id}: {id: string}): Promise<boolean> => {
   
 const updateUser = async ({ id }: { id: string },{ data }: { data: Partial<User> }): Promise<User> => {
     if(Number.isNaN(Number(id))) throw new Error('Id must be numeric');
-
+    if(!data) throw new Error('Data must be provided');
+    if(!data.firstname.trim() || !data.lastname.trim()) throw new Error('Firstname and Lastname must be provided');
     return userDB.updateUser({id: parseInt(id)}, { data: data });
 };
 

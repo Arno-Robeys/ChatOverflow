@@ -25,49 +25,29 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
     const router = useRouter();
 
     const handleChatClick = async (): Promise<void> => {
-        // Create chat and redirect to chat
         const response = await fetch('http://localhost:3000/chat/create', {
             method: 'POST',
             body: JSON.stringify({ user1: loggedInUserId, user2: profileUserId }),
             headers: { 'Content-Type': 'application/json' },
         });
-        console.log(response);
 
         if (response.ok) {
-            const { chatId } = await response.json();
-            router.push(`/chat/${chatId}`);
+            const data = await response.json();
+            console.log(data)
+            router.push(`/chat/${data.chatid}`);
         }
 
     };
-
-
-
-    /* router.push({
-        pathname: "/chat/create",
-        query: { 
-            profileUserId: profileUserId,
-            loggedInUserId: loggedInUserId
-        }
-    });
-} */
-
-
-
-
 
     return (
 
         <div className=" flex items-center justify-center py-4">
             <div className="sm:w-8/12">
                 {loggedInUserId !== profileUserId ?
-                    <button
-                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        onClick={handleChatClick}
-                    >
+                    <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={handleChatClick}>
                         Chat with {profile?.firstname}
                     </button>
                     : null
-
                 }
                 <div className="mt-2 flex items-center">
 
@@ -87,8 +67,6 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
 
                 {profile?.profile ?
                     <>
-                        <h1 className="content-center text-2xl font-bold text-gray-900">About me</h1>
-
                         {profile.profile.description ?
                             <div className="mt-4">
                                 <p className="block text-sm font-bold leading-6 text-gray-900">Description</p>

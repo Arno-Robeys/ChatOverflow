@@ -1,24 +1,13 @@
 import { useSession } from 'next-auth/react';
 import Link from 'next/link'
 import{ useState,useEffect } from 'react'
-
-interface Chat {
-    chatid: number;
-    users: User[];
-}
-
-interface User {
-    userid: number;
-    firstname: string;
-    lastname: string;
-    nickname: string;
-}
-
+import { UserChat } from "@/types/userchat.type";
 
 const Chats: React.FC = () => {
 
     const { data: session } = useSession();
-    const [chats, setChats] = useState<Chat[]>([]);
+    if(!session) return (<div>Not logged in</div>);
+    const [chats, setChats] = useState<UserChat[]>([]);
 
     useEffect(() => {
         (async () => {
@@ -41,19 +30,21 @@ const Chats: React.FC = () => {
                     </div>
                  : 
                     <div className="divide-y divide-gray-200">
-                    {chats.map((chat) => (
+                    {chats.map((chat) =>  {
+                        var user = chat.users.find(user => user.userid !== parseInt(session?.user.id));
+                        return (
                         <div key={chat.chatid} className="w-full text-left py-2 hover:bg-gray-100">
                             <Link href={`/chat/${chat.chatid}`}>
                                 <div className="flex items-center">
                                     <img className="rounded-full items-start flex-shrink-0 mr-3" width="32" height="32" />
                                     <div>
-                                        <h4 className="text-sm font-semibold text-gray-900">{chat.users[1].nickname ? chat.users[1].nickname : chat.users[1].firstname + " " + chat.users[1].lastname}</h4>
+                                        <h4 className="text-sm font-semibold text-gray-900">{user?.nickname ? user.nickname : user?.firstname + " " + user?.lastname}</h4>
                                         <div className="text-[13px]">Doebadoebadoe · 2hrs</div>
                                     </div>
                                 </div>
                             </Link>
                         </div>
-                        ))}
+                        )})}
                     </div>}
             </div>
     </div>
