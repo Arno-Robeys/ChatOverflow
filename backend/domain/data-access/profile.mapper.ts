@@ -10,13 +10,12 @@ export class ProfileMapper {
             work: prismaUser.work,
             education: prismaUser.education,
             hobby: prismaUser.hobby,
-            rating: prismaUser.rating,
             tags: prismaUser.tags,
         })
     }
 
     static toPersistence(user: Profile): PrismaProfile {
-        return {userid: user.userid, description: user.description, avatar: user.avatar, work: user.work, education: user.education, hobby: user.hobby, rating: user.rating, tags: user.tags }
+        return {userid: user.userid, description: user.description, avatar: user.avatar, work: user.work, education: user.education, hobby: user.hobby, tags: user.tags }
     }
 
 }
