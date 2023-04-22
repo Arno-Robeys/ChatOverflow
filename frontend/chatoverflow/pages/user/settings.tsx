@@ -2,13 +2,16 @@ import { UserProfile } from '@/types/userprofile.type';
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { FormEventHandler, useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 
 const userSettings: React.FC = () => {
 
   const [user, setUser] = useState<UserProfile>();
 
   const { data: session } = useSession();
+  const router = useRouter();
   if(!session) return (<div>Not logged in</div>);
   const loggedInUserId = session.user.id;
 
@@ -30,13 +33,42 @@ const userSettings: React.FC = () => {
     setUser(data);
   })()},[]);
 
-  const inputRefs = Array.from({ length: 6 }).map(() => useRef<HTMLInputElement>(null));
+  const inputRefs = Array.from({ length: 7 }).map(() => useRef<HTMLInputElement>(null));
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
-
 
   const handleSubmit : FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    const [firstnameInput, lastnameInput, nicknameInput, educationInput, workInput, tagsInput] = inputRefs.map((ref) => ref.current);
+    const [firstnameInput, lastnameInput, nicknameInput, hobbyInput, educationInput, workInput, tagsInput] = inputRefs.map((ref) => ref.current);
+    const descriptionInput = descriptionRef.current;
+
+    const response = await fetch(`http://localhost:3000/profile/update`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        userid: loggedInUserId,
+        description: descriptionInput?.value,
+        hobby: hobbyInput?.value,
+        work: workInput?.value,
+        education: educationInput?.value,
+        tags: tagsInput?.value,
+      }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const response2 = await fetch(`http://localhost:3000/user/update`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        firstname: firstnameInput?.value,
+        lastname: lastnameInput?.value,
+        nickname: nicknameInput?.value,
+        userid: loggedInUserId
+      }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if(response.ok && response2.ok) {
+      router.push(`/user/profile`);
+      toast.success('Profile Updated!');
+    }
   };
 
   return (
@@ -77,20 +109,24 @@ const userSettings: React.FC = () => {
                 <textarea name="description" defaultValue={user?.profile.description || ""} ref={descriptionRef} id="description" placeholder="Write a few sentences about yourself" className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"/>
             </div>
 
+            <div className="mt-4">
+                <label htmlFor="hobby" className="block text-sm font-medium leading-6 text-gray-900">Hobby</label>
+                <input type="text" defaultValue={user?.profile.hobby || ""} ref={inputRefs[3]} name="hobby" id="hobby" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+            </div>
             <div className="mt-4 flex flex-col sm:flex-row sm:justify-between">
                     <div className="mb-4 sm:mb-0 sm:w-1/2 sm:pr-2">
                         <label htmlFor="education" className="block text-sm font-medium leading-6 text-gray-900">Education</label>
-                        <input type="text" defaultValue={user?.profile.education || ""} ref={inputRefs[3]} name="education" id="education" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+                        <input type="text" defaultValue={user?.profile.education || ""} ref={inputRefs[4]} name="education" id="education" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                     </div>
                     <div className="sm:w-1/2 sm:pl-2">
                         <label htmlFor="work" className="block text-sm font-medium leading-6 text-gray-900">Work</label>
-                        <input type="text" defaultValue={user?.profile.work || ""} ref={inputRefs[4]} name="work" id="work" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+                        <input type="text" defaultValue={user?.profile.work || ""} ref={inputRefs[5]} name="work" id="work" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                     </div>
             </div>
 
             <div className="mt-4">
                 <label htmlFor="tags" className="block text-sm font-medium leading-6 text-gray-900">Tags</label>
-                <input type="text" defaultValue={user?.profile.tags || ""} ref={inputRefs[5]} name="tags" id="tags" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+                <input type="text" defaultValue={user?.profile.tags || ""} ref={inputRefs[6]} name="tags" id="tags" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
             </div>
         </div>
 

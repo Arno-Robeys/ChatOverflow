@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { SessionProvider } from 'next-auth/react';
 import AuthWrapper from '@/components/AuthWrapper';
+import { Toaster } from 'react-hot-toast';
 
 const publicPages = ["/auth", "/"];
 export default function App({ Component, pageProps }: AppProps) {
@@ -13,6 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
   <>
     <SessionProvider session={pageProps.session}>
+    <Toaster />
       {isPublicPage ? (
           <Component {...pageProps} />
         ) : (

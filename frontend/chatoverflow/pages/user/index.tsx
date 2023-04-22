@@ -1,12 +1,8 @@
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import SideBar from "@/components/Sidebar";
 
 const UserHome: React.FC = () => {
     const { data: session } = useSession();
-
-    const router = useRouter();
-    const { id } = router.query;
 
     return (
         // main container

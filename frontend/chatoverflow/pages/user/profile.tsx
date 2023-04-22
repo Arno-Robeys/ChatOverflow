@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import Chat from "@/components/Chat";
 import SideBar from "@/components/Sidebar";
 import Profile from "@/components/Profile";
 
