@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import Chats from './Chats';
 import Link from 'next/link';
+import { UserCircleIcon } from '@heroicons/react/24/solid';
 
 const SideBar: React.FC = () => {
 
@@ -62,7 +63,7 @@ const SideBar: React.FC = () => {
                           <div key={user.userid} className='w-full text-left py-2 hover:bg-gray-100'>
                             <Link href={`/user/profile?id=${user.userid}`}>
                                 <div className="flex items-center">
-                                    <img className="rounded-full items-start flex-shrink-0 mr-3" width="32" height="32" alt="Marie Zulfikar" />
+                                <UserCircleIcon className="h-10 w-10 text-gray-300" aria-hidden="true" />
                                     <div>
                                       <h4 className="text-sm font-semibold text-gray-900">{user.nickname ? user.nickname : user.firstname + ' ' + user.lastname}</h4>
                                     </div>

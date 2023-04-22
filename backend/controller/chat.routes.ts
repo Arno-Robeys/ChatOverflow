@@ -176,12 +176,12 @@ router.post("/create", async (req, res) => {
  *         name: chatid
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *       - in: query
  *         name: userid
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: A chat with added user

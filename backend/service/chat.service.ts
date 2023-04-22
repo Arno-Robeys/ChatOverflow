@@ -3,12 +3,12 @@ import chatDB from '../domain/data-access/chat.db';
 import userDB from '../domain/data-access/user.db';
 
 
-const createChat = async (user1: number, user2: number): Promise<Chat> => {
+const createChat = async (user1: string, user2: string): Promise<Chat> => {
     if(!user1 || !user2) throw new Error("Users must be provided")
     if(Number.isNaN(Number(user1)) || Number.isNaN(Number(user2))) throw new Error("Users must be numeric");
 
-    const user1Exists = await userDB.getUserById({id: user1});
-    const user2Exists = await userDB.getUserById({id: user2});
+    const user1Exists = await userDB.getUserById({id: parseInt(user1)});
+    const user2Exists = await userDB.getUserById({id: parseInt(user2)});
 
     if(!user1Exists || !user2Exists) throw new Error("Users must exist");
 
