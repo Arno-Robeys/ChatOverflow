@@ -18,7 +18,6 @@
  *
  */
 import express from "express";
-import { Chat } from "../domain/model/chat";
 import chatService from "../service/chat.service";
 const router = express.Router();
 

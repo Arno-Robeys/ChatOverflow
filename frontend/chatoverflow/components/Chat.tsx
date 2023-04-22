@@ -1,10 +1,25 @@
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { UserChat } from "@/types/userchat.type";
 
 const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
+  const { data: session } = useSession();
+  if(!session) return (<div>Not logged in</div>);
+  const [data, setData] = useState<UserChat>();
+  const [otherUser, setOtherUser] = useState<any>();
 
-  const router = useRouter();
+  useEffect(() => {
+    (async () => {
+      const response = await fetch(`http://localhost:3000/chat/${chatId}`, { method: 'GET' });
+      const data = await response.json();
+      setData(data);
+
+      const user = data.users.find((user: { userid: number; }) => user.userid !== parseInt(session?.user.id));
+      setOtherUser(user);
+    })();
+  });
+
   return (
         <div className="flex-1 p:2 sm:pb-20 justify-between flex flex-col h-screen">
           <div className="flex sm:items-center justify-between p-3 border-b-2 border-gray-200">
@@ -12,15 +27,17 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
                 <img src="" alt="" className="w-10 sm:w-12 h-10 sm:h-12 rounded-full"></img>
                 <div className="flex flex-col leading-tight">
                     <div className="text-2xl mt-1 flex items-center">
-                      <span className="text-gray-700 mr-3">ChatOverflow</span>
+                      <span className="text-gray-700 mr-3">
+                        {otherUser && (otherUser.nickname ? otherUser.nickname : `${otherUser.firstname} ${otherUser.lastname}`)}
+                      </span>
                     </div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <Link href={"#"} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-20 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none">Profile</Link>
+                <Link href={`/user/profile?id=${otherUser?.userid}`} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-20 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none">Profile</Link>
                 <Link href={"/user"} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                   </svg>
                 </Link>
               </div>
@@ -59,7 +76,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
               <div className="chat-message">
                 <div className="flex items-end">
                     <div className="flex flex-col space-y-2 max-w-md mx-2 order-2 items-start">
-                      <div><span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">Aah, I know a little bit about this! You can use sockets to create a chat</span></div>
+                      <div><span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">Aah, I know a little bit about this! You can use sockets to create a system for messages</span></div>
                     </div>
                 </div>
               </div>
