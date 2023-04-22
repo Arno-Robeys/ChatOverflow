@@ -107,7 +107,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                 :null
                 }
                 {profile.profile.work ?
-                    <div className="sm:w-1/2 sm:pl-2">
+                    <div className="sm:w-1/2 ">
                         <p className="block text-sm font-bold leading-6 text-gray-900">Work</p>
                         <p className="block w-full rounded-md border-0 py-1.5 text-gray-900  sm:text-sm sm:leading-6">{profile?.profile.work}</p>
                     </div>
@@ -125,7 +125,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                 :null
                 }
                 {profile.profile.hobby ?
-                    <div className="sm:w-1/2 sm:pl-2">
+                    <div className="sm:w-1/2 ">
                         <p className="block text-sm font-bold leading-6 text-gray-900">Hobby's</p>
                         <p className="block w-full rounded-md border-0 py-1.5 text-gray-900  sm:text-sm sm:leading-6">{profile?.profile.hobby}</p>
                     </div>
