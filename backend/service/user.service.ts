@@ -1,14 +1,12 @@
 import { User } from '../domain/model/user';
 import userDB from '../domain/data-access/user.db';
-import profileDb from '../domain/data-access/profile.db';
 
 const getAllUsers = async (): Promise<User[]> => {
     return userDB.getAllUsers();
 };
 
 const createUser = async (user: User): Promise<User> => {
-
-    if(!user.firstname || !user.lastname || !user.password) throw new Error("All fields must be provided")
+    if(!user.firstname.trim() || !user.lastname.trim() || !user.password.trim()) throw new Error("All fields must be provided")
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -52,6 +50,7 @@ const deleteUserById = async ({id}: {id: string}): Promise<boolean> => {
 const updateUser = async ({ id }: { id: string },{ data }: { data: Partial<User> }): Promise<User> => {
     if(Number.isNaN(Number(id))) throw new Error('Id must be numeric');
     if(!data) throw new Error('Data must be provided');
+
     if(!data.firstname.trim() || !data.lastname.trim()) throw new Error('Firstname and Lastname must be provided');
     return userDB.updateUser({id: parseInt(id)}, { data: data });
 };
@@ -72,5 +71,5 @@ export default {
     getAllUsersByName,
     deleteUserById,
     updateUser,
-    getUserAndProfileById
+    getUserAndProfileById,
 };

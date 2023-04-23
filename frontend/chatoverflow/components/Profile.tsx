@@ -18,9 +18,14 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
         (async () => {
             const response = await fetch(`http://localhost:3000/user/${profileUserId}/profile`, { method: 'GET' });
             const data = await response.json();
+            const filteredProfileData = Object.fromEntries(
+                Object.entries(data.profile || {})
+                .filter(([key, value]) => value !== null && value !== undefined && value !== "" && key !== "id" && key !== "userid")
+              );
+            data.profile = filteredProfileData;
             setProfile(data);
         })();
-    });
+    }, [profileUserId])
 
     const router = useRouter();
 
@@ -33,7 +38,6 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
 
         if (response.ok) {
             const data = await response.json();
-            console.log(data)
             router.push(`/chat/${data.chatid}`);
         }
 
@@ -60,9 +64,9 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                 </div>
 
 
-                {profile?.profile ?
+                {profile?.profile && Object.keys(profile?.profile).length > 0 ?
                     <>
-                        {profile.profile.description ?
+                        {profile?.profile.description ?
                             <p className="text-gray-900 mx-2 sm:py-1.5 sm:text-sm sm:leading-6"><strong>Description:</strong> {profile?.profile.description}</p>
                             : null
                         }
@@ -71,14 +75,14 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                         <div className="flex-col p-2 flex border-t-2">
                             <p className="block text-xl font-bold leading-6 text-gray-900 mt-2">Details</p>
                             <div className="mt-2 flex flex-col sm:flex-row sm:justify-between">
-                            {profile.profile.education ?
+                            {profile?.profile.education ?
                                 <div className="mb-4 sm:mb-0 sm:w-1/2 sm:pr-2">
                                     <p className="block text-sm font-bold leading-6 text-gray-900">Education</p>
                                     <p className="text-gray-900 sm:text-sm sm:leading-6">{profile?.profile.education}</p>
                                 </div>
                                 : null
                             }
-                            {profile.profile.work ?
+                            {profile?.profile.work ?
                                 <div className="sm:w-1/2 ">
                                     <p className="block text-sm font-bold leading-6 text-gray-900">Work</p>
                                     <p className="text-gray-900 sm:text-sm sm:leading-6">{profile?.profile.work}</p>
@@ -87,14 +91,14 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                             }
                             </div>
                             <div className="mt-2 flex flex-col sm:flex-row sm:justify-between">
-                            {profile.profile.hobby ?
+                            {profile?.profile.hobby ?
                                 <div className="sm:w-1/2 ">
                                     <p className="block text-sm font-bold leading-6 text-gray-900">Hobby's</p>
                                     <p className="text-gray-900 sm:text-sm sm:leading-6">{profile?.profile.hobby}</p>
                                 </div>
                                 : null
                             }
-                            {profile.profile.tags ?
+                            {profile?.profile.tags ?
                             <div className="mb-4 sm:mb-0 sm:w-1/2 sm:pr-2">
                                 <p className="block text-sm font-bold leading-6 text-gray-900">Tags</p>
                                 <p className="text-gray-900 sm:text-sm sm:leading-6">{profile?.profile.tags}</p>
@@ -106,7 +110,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                     </>
                     :
                     <div className="flex-col mt-2 flex border-t-2"><p className="block text-xl font-bold leading-6 text-gray-900 mt-2">Details</p>
-                    <p className="text-gray-700">This user doesn't have a profile yet</p>
+                    <p className="text-gray-700">This user doesn't have any information to share</p>
                     </div>
                 }
             </>

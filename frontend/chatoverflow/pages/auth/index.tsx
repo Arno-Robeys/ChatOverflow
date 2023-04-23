@@ -24,12 +24,20 @@ const Register: React.FC = () => {
             headers: { 'Content-Type': 'application/json' }
         });
 
-        if (response.ok) {
+        var data = await response.json();
+
+        const response2 = await fetch(`http://localhost:3000/profile/createprofile`, {
+            method: 'POST',
+            body: JSON.stringify({userid: data.user.userid}),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok && response2.ok) {
             router.push('/');
             toast.success('Account created!');
         } else {
             setUser({ ...user, password: '' });
-            setErrors([(await response.json()).errorMessage]);
+            setErrors([data.errorMessage] || ['Something went wrong.']);
         }
     };
 
