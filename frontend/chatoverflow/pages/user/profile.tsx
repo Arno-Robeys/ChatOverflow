@@ -12,11 +12,11 @@ const ProfilePage: React.FC = () => {
         // main container
         <div className='h-screen overflow-hidden flex'>
             {/* 2 components */}
-                    <div className="border min-w-[340px] max-w-[500] bg-gray-50">
+                    <div className="border min-w-[300px] max-w-[500] bg-gray-50 hidden sm:block">
                         <SideBar/>
                     </div>
                     
-                    <div className="flex-grow min-w-[415px] max-w-[1820px] pt-4 pl-4">
+                    <div className="flex-grow w-min max-w-[1820px] py-4 md:p-4 p-2">
                       <Profile userId={id}/>
                     </div>
                 
