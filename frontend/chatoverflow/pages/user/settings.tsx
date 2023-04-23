@@ -12,26 +12,17 @@ const userSettings: React.FC = () => {
 
   const { data: session } = useSession();
   const router = useRouter();
-  if(!session) return (<div>Not logged in</div>);
+  if(!session) return null;
   const loggedInUserId = session.user.id;
 
   useEffect(() => {
   (async () => {
     const response = await fetch(`http://localhost:3000/user/${loggedInUserId}/profile`);
     var data = await response.json();
-
-    if(!data.hasOwnProperty('profile')) {
-      const response2 = await fetch(`http://localhost:3000/profile/createprofile`, {
-        method: 'POST',
-        body: JSON.stringify({userid: parseInt(loggedInUserId)}),
-        headers: { 'Content-Type': 'application/json' }});
-  
-        if(response2.ok) {
-          data.profile = await response2.json();
-        }
-    }
     setUser(data);
   })()},[]);
+
+
 
   const inputRefs = Array.from({ length: 7 }).map(() => useRef<HTMLInputElement>(null));
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -41,36 +32,29 @@ const userSettings: React.FC = () => {
     const [firstnameInput, lastnameInput, nicknameInput, hobbyInput, educationInput, workInput, tagsInput] = inputRefs.map((ref) => ref.current);
     const descriptionInput = descriptionRef.current;
 
-    const response2 = await fetch(`http://localhost:3000/user/update`, {
+    const response = await fetch(`http://localhost:3000/user/update`, {
       method: 'PUT',
       body: JSON.stringify({
         firstname: firstnameInput?.value,
         lastname: lastnameInput?.value,
         nickname: nicknameInput?.value,
+        profile: {  
+          description: descriptionInput?.value,
+          hobby: hobbyInput?.value,
+          work: workInput?.value,
+          education: educationInput?.value,
+          tags: tagsInput?.value,
+        },
         userid: loggedInUserId
       }),
       headers: { 'Content-Type': 'application/json' }
     });
 
-    const response = await fetch(`http://localhost:3000/profile/update`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        userid: loggedInUserId,
-        description: descriptionInput?.value,
-        hobby: hobbyInput?.value,
-        work: workInput?.value,
-        education: educationInput?.value,
-        tags: tagsInput?.value,
-      }),
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    if(response.ok && response2.ok) {
+    if(response.ok) {
       router.push(`/user/profile`);
       toast.success('Profile Updated!');
     } else {
-      console.log(response2)
-      toast.error('Firstname and lastname are required!');
+      toast.error((await response.json()).errorMessage);
     }
   };
 

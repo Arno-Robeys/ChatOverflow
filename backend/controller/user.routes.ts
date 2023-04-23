@@ -332,12 +332,12 @@ router.post("/login", async (req, res) => {
  *         description: Internal Server Error
  */
 router.put("/update", async (req, res) => {
-    const id = req.body.userid
-    const changed = req.body
+    const {userid, ...changed} = req.body
     try {
-        const updatedUser = await userService.updateUser({id: id}, {data: changed})
+        const updatedUser = await userService.updateUser({id: userid}, {data: changed})
         res.status(200).json({status: "success", updatedUser})
     } catch(error) {
+        console.log(error)
         res.status(500).json({status: 'error', errorMessage: error.message})
     }
 })
