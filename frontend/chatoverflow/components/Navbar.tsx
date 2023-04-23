@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { signOut } from 'next-auth/react'
@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import React from 'react'
+import SideBar from './Sidebar'
+import Chats from './Chats'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -33,7 +35,19 @@ const Navbar: React.FC = () => {
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    <><XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                  <Transition as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95">
+                    <Disclosure.Panel onClick={(e) => e.stopPropagation()} className="fixed inset-0 z-50 top-16 mt-1 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <SideBar/>
+                    </Disclosure.Panel>
+                  </Transition>
+                    </>
                   ) : (
                     <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                   )}
@@ -46,7 +60,7 @@ const Navbar: React.FC = () => {
                     className="block h-8 w-auto lg:hidden"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                     alt="Logo"
-                  /> </a>
+                  /></a>
                   <a href="/user">
                   <img
                     className="hidden h-8 w-auto lg:block"

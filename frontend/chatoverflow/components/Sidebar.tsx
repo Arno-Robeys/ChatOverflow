@@ -4,6 +4,7 @@ import Chats from './Chats';
 import Link from 'next/link';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
 
+
 const SideBar: React.FC = () => {
 
   interface User {

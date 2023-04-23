@@ -3,7 +3,7 @@ import Link from 'next/link'
 import{ useState,useEffect } from 'react'
 import { UserChat } from "@/types/userchat.type";
 
-const Chats: React.FC = () => {
+const Chats: React.FC<{ props?: string | string[] }> = ({ props}) => {
 
     const { data: session } = useSession();
     if(!session) return (<div>Not logged in</div>);
@@ -19,8 +19,8 @@ const Chats: React.FC = () => {
 
   return (
     <section className="flex flex-col antialiased bg-gray-50 text-gray-600 h-full">
-    <div className="h-full">
-            <div className="py-3 px-5">
+    <div>
+            <div className="sm:py-3 sm:px-5">
                 <h3 className="text-xs font-semibold uppercase text-gray-400 mb-1">Chats</h3>
 
                 {chats.length === 0 ? 

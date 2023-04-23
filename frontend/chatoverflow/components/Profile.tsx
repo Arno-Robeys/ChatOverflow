@@ -40,90 +40,76 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
     };
 
     return (
-
-        <div className=" flex items-center justify-center py-4">
-            <div className="sm:w-8/12">
+            <>
                 {loggedInUserId !== profileUserId ?
                     <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={handleChatClick}>
                         Chat with {profile?.firstname}
                     </button>
                     : null
                 }
-                <div className="mt-2 flex items-center">
 
-                    <div className="flex-1 flex flex-col items-center">
-                        <UserCircleIcon className="h-48 w-48 text-gray-300" aria-hidden="true" />
-                        {profile?.nickname ?
-                            <>
-                                <h1 className="text-3xl font-bold text-gray-900">{profile?.nickname}</h1>
-                                <h3 className="text-gray-900">{profile?.firstname} {profile?.lastname}</h3>
-                            </>
-                            :
+                <div className="flex mt2 flex-col items-center">
+                    <UserCircleIcon className="h-48 w-48 text-gray-300" aria-hidden="true" />
+                    {profile?.nickname ?
+                        <>
+                            <h1 className="text-3xl font-bold text-gray-900">{profile?.nickname}</h1>
+                            <h3 className="text-gray-900">{profile?.firstname} {profile?.lastname}</h3>
+                        </>:
                             <h1 className="text-2xl font-bold text-gray-900">{profile?.firstname} {profile?.lastname}</h1>
-                        }
-                    </div>
+                    }
                 </div>
 
 
                 {profile?.profile ?
                     <>
                         {profile.profile.description ?
-                            <div className="mt-4">
-                                <p className="block text-sm font-bold leading-6 text-gray-900">Description</p>
-                                <p className="whitespace-normal block w-full rounded-md border-0 text-gray-900 sm:py-1.5 sm:text-sm sm:leading-6">{profile?.profile.description}</p>
-                            </div>
+                            <p className="text-gray-900 mx-2 sm:py-1.5 sm:text-sm sm:leading-6"><strong>Description:</strong> {profile?.profile.description}</p>
                             : null
                         }
 
 
-                        <div className="mt-4 flex flex-col sm:flex-row sm:justify-between">
+                        <div className="flex-col p-2 flex border-t-2">
+                            <p className="block text-xl font-bold leading-6 text-gray-900 mt-2">Details</p>
+                            <div className="mt-2 flex flex-col sm:flex-row sm:justify-between">
                             {profile.profile.education ?
                                 <div className="mb-4 sm:mb-0 sm:w-1/2 sm:pr-2">
                                     <p className="block text-sm font-bold leading-6 text-gray-900">Education</p>
-                                    <p className="block w-full rounded-md border-0 py-1.5 text-gray-900  sm:text-sm sm:leading-6">{profile?.profile.education}</p>
+                                    <p className="text-gray-900 sm:text-sm sm:leading-6">{profile?.profile.education}</p>
                                 </div>
                                 : null
                             }
                             {profile.profile.work ?
                                 <div className="sm:w-1/2 ">
                                     <p className="block text-sm font-bold leading-6 text-gray-900">Work</p>
-                                    <p className="block w-full rounded-md border-0 py-1.5 text-gray-900  sm:text-sm sm:leading-6">{profile?.profile.work}</p>
+                                    <p className="text-gray-900 sm:text-sm sm:leading-6">{profile?.profile.work}</p>
                                 </div>
                                 : null
                             }
-                        </div>
-                        <div className="mt-4 flex flex-col sm:flex-row sm:justify-between">
-
-                            {profile.profile.tags ?
-
-                                <div className="mb-4 sm:mb-0 sm:w-1/2 sm:pr-2">
-                                    <p className="block text-sm font-bold leading-6 text-gray-900">Tags</p>
-                                    <p className="block w-full rounded-md border-0 py-1.5 text-gray-900  sm:text-sm sm:leading-6">{profile?.profile.tags}</p>
-                                </div>
-                                : null
-                            }
+                            </div>
+                            <div className="mt-2 flex flex-col sm:flex-row sm:justify-between">
                             {profile.profile.hobby ?
                                 <div className="sm:w-1/2 ">
                                     <p className="block text-sm font-bold leading-6 text-gray-900">Hobby's</p>
-                                    <p className="block w-full rounded-md border-0 py-1.5 text-gray-900  sm:text-sm sm:leading-6">{profile?.profile.hobby}</p>
+                                    <p className="text-gray-900 sm:text-sm sm:leading-6">{profile?.profile.hobby}</p>
                                 </div>
                                 : null
                             }
+                            {profile.profile.tags ?
+                            <div className="mb-4 sm:mb-0 sm:w-1/2 sm:pr-2">
+                                <p className="block text-sm font-bold leading-6 text-gray-900">Tags</p>
+                                <p className="text-gray-900 sm:text-sm sm:leading-6">{profile?.profile.tags}</p>
+                            </div>
+                            : null
+                            }
+                            </div>
                         </div>
-
-
-
-
-
-
-
-
                     </>
                     :
-                    <h1 className="text-2xl font-bold text-gray-900">This user doesn't have a profile yet</h1>
+                    <div className="flex-col mt-2 flex border-t-2"><p className="block text-xl font-bold leading-6 text-gray-900 mt-2">Details</p>
+                    <p className="text-gray-700">This user doesn't have a profile yet</p>
+                    </div>
                 }
-            </div>
-        </div>
+            </>
     );
 };
 
