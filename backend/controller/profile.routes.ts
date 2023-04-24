@@ -23,9 +23,6 @@
  *         hobby:
  *           type: string
  *           description: The hobby of the user.
- *         rating:
- *           type: string
- *           description: The rating of the user.
  *         education:
  *           type: string
  *           description: The education of the user.
@@ -174,9 +171,6 @@ router.post("/createprofile", async (req, res) => {
  *               hobby:
  *                 type: string
  *                 example: Basketball
- *               rating:
- *                 type: string
- *                 example: 5
  *               education:
  *                 type: string
  *                 example: Bert's education

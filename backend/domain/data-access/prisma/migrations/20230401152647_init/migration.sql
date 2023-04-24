@@ -34,7 +34,6 @@ CREATE TABLE "Profile" (
     "avatar" TEXT,
     "work" TEXT,
     "hobby" TEXT,
-    "rating" TEXT,
     "education" TEXT,
     "tags" TEXT
 );

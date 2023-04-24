@@ -33,7 +33,6 @@
  *
  */
 import express from "express";
-import { Message } from "../domain/model/message";
 import messageService from "../service/message.service";
 const router = express.Router();
 

@@ -18,7 +18,6 @@
  *
  */
 import express from "express";
-import { Chat } from "../domain/model/chat";
 import chatService from "../service/chat.service";
 const router = express.Router();
 
@@ -138,10 +137,10 @@ router.get("/user/:id", async (req, res) => {
  *             type: object
  *             properties:
  *               user1:
- *                 type: Integer
+ *                 type: String
  *                 example: 1
  *               user2:
- *                 type: Integer
+ *                 type: String
  *                 example: 7
  *     responses:
  *       200:
@@ -176,12 +175,12 @@ router.post("/create", async (req, res) => {
  *         name: chatid
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *       - in: query
  *         name: userid
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: A chat with added user

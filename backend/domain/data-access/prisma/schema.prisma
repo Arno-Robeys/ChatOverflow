@@ -45,7 +45,6 @@ model Profile {
   avatar      String? 
   work        String?
   hobby       String?
-  rating      String?
   education   String?
   tags        String?
   user        User    @relation(fields: [userid], references: [userid])

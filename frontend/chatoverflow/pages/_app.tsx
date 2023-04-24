@@ -3,20 +3,28 @@ import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { SessionProvider } from 'next-auth/react';
-import SettingsComponent from '@/components/SettingsComponent'
+import AuthWrapper from '@/components/AuthWrapper';
+import { Toaster } from 'react-hot-toast';
 
+const publicPages = ["/auth", "/"];
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
-  const showNavbar = router.pathname === "/auth" || router.pathname === "/" ? false : true
-// Set showSettings to true when the current route is '/settings'
-const showSettings = router.pathname === "/settings";
+  const isPublicPage = publicPages.includes(router.pathname);
+
   return (
   <>
-    <SessionProvider>
-      {showNavbar && <Navbar />}
-      <Component {...pageProps}>
-        {showSettings && <SettingsComponent />}
-      </Component>
+    <SessionProvider session={pageProps.session}>
+      <div className='flex flex-col h-screen'>
+      <Toaster />
+      {isPublicPage ? (
+          <Component {...pageProps} />
+        ) : (
+          <AuthWrapper>
+            <Navbar />
+            <Component {...pageProps} />
+          </AuthWrapper>
+        )}
+      </div>
     </SessionProvider>
   </>)
 }

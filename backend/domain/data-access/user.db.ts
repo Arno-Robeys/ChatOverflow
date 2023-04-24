@@ -1,11 +1,9 @@
 import { User } from '../model/user';
 import database from '../data-access/prisma/database';
 import { UserMapper } from './user.mapper';
-import { ProfileMapper } from './profile.mapper';
-import { Profile } from '../model/profile';
 
 const createUser = async (user: User): Promise<User> => {
-  return UserMapper.toDomain(await database.user.create({data : UserMapper.toPersistence(user)}));
+  return UserMapper.toDomain(await database.user.create({data: UserMapper.toPersistence(user)}));
 };
 
 const getAllUsers = async (): Promise<User[]> => {;
@@ -15,7 +13,16 @@ const getAllUsers = async (): Promise<User[]> => {;
 }
 
 const getAllUsersByName = async ({name}: {name: string}): Promise<User[]> => {
-  const users = await database.user.findMany({where: {OR: [{firstname: name},{lastname: name},{nickname: name}]}})
+  const users = await database.user.findMany({
+    where: {
+      OR: [
+        { firstname: { contains: name, mode: "insensitive" } },
+        { lastname: { contains: name, mode: "insensitive" } },
+        { nickname: { contains: name, mode: "insensitive" } },
+        { AND: [
+            { firstname: { contains: name.split(' ')[0], mode: "insensitive" } },
+            { lastname: { contains: name.split(' ')[1], mode: "insensitive" } },
+          ]}]}})
   if(!users) throw new Error("No users found");
   return users.map((user) => UserMapper.toDomain(user));
 }
@@ -44,7 +51,7 @@ const deleteUserById = async ({id}: {id: number}): Promise<boolean> => {
 
 const updateUser = async ({ id }: { id: number },{ data }: { data: Partial<User> }): Promise<User> => {
   const userToUpdate = UserMapper.toPersistence(data as User);
-  const updatedUser = await database.user.update({where: { userid: id }, data: userToUpdate});
+  const updatedUser = await database.user.update({where: { userid: id }, data: userToUpdate, include: { profile: true }});
   return UserMapper.toDomain(updatedUser);
 };
 
@@ -56,6 +63,6 @@ export default {
   getUserByEmail,
   deleteUserById,
   updateUser,
-  getUserAndProfileById
+  getUserAndProfileById,
 };
 

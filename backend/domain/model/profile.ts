@@ -5,7 +5,6 @@ export class Profile {
     readonly avatar?: string;
     readonly work?: string;
     readonly hobby?: string;
-    readonly rating?: string;
     readonly education?: string;
     readonly tags?: string;
 
@@ -15,7 +14,6 @@ export class Profile {
         avatar?: string;
         work?: string;
         hobby?: string;
-        rating?: string;
         education?: string;
         tags?: string;
     }) {
@@ -24,7 +22,6 @@ export class Profile {
         this.avatar = user.avatar;
         this.work = user.work;
         this.hobby = user.hobby;
-        this.rating = user.rating;
         this.education = user.education;
         this.tags = user.tags;
     }

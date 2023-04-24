@@ -1,7 +1,8 @@
-import { User as PrismaUser } from "@prisma/client";
+import { Prisma, User as PrismaUser } from "@prisma/client";
 import { User } from "../model/user";
 import { Profile as PrismaProfile } from "@prisma/client";
 import { ProfileMapper } from "./profile.mapper";
+import { Profile } from "../model/profile";
 
 export class UserMapper {
     static toDomain(prismaUser: PrismaUser & { profile?: PrismaProfile}): User {
@@ -16,8 +17,18 @@ export class UserMapper {
         })
     }
 
-    static toPersistence(user: User): Omit<PrismaUser,'userid'> {
-        return { firstname: user.firstname, lastname: user.lastname, password: user.password, nickname: user.nickname, email: user.email }
-    }
+
+    static toPersistence(user: User & { profile?: Profile}): Omit<PrismaUser, 'userid'> {
+        const userData = { 
+          userid: user.userid,
+          firstname: user.firstname, 
+          lastname: user.lastname, 
+          password: user.password, 
+          nickname: user.nickname, 
+          email: user.email 
+        };
+        const profileData = user.profile ? { profile: { update: ProfileMapper.toPersistence(user.profile) } } : {};
+        return { ...userData, ...profileData };
+      }
 
 }

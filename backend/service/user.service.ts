@@ -6,20 +6,18 @@ const getAllUsers = async (): Promise<User[]> => {
 };
 
 const createUser = async (user: User): Promise<User> => {
-
-    if(!user.firstname || !user.lastname || !user.password) throw new Error("All fields must be provided")
+    if(!user.firstname.trim() || !user.lastname.trim() || !user.password.trim()) throw new Error("All fields must be provided")
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if(!emailRegex.test(user.email)) throw new Error("Email must be valid")
-
-    return userDB.createUser(user);
+    return await userDB.createUser(user);
   };
 
 const getAllUsersByName = async (name: string): Promise<User[]> => {
     if(!name) throw new Error('Name must be provided');
     const users = await userDB.getAllUsersByName({name: name});
-    if(!users) throw new Error('No users found');
+    if(!users || users.length === 0) throw new Error('No users found');
     return users;
 }
 
@@ -51,7 +49,9 @@ const deleteUserById = async ({id}: {id: string}): Promise<boolean> => {
   
 const updateUser = async ({ id }: { id: string },{ data }: { data: Partial<User> }): Promise<User> => {
     if(Number.isNaN(Number(id))) throw new Error('Id must be numeric');
+    if(!data) throw new Error('Data must be provided');
 
+    if(!data.firstname.trim() || !data.lastname.trim()) throw new Error('Firstname and Lastname must be provided');
     return userDB.updateUser({id: parseInt(id)}, { data: data });
 };
 
@@ -71,5 +71,5 @@ export default {
     getAllUsersByName,
     deleteUserById,
     updateUser,
-    getUserAndProfileById
+    getUserAndProfileById,
 };
