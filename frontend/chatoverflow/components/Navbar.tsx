@@ -63,13 +63,13 @@ const Navbar: React.FC = () => {
                   <a href="/user">
                   <img
                     className="block h-8 w-auto lg:hidden"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                    src="/logo.png"
                     alt="Logo"
                   /></a>
                   <a href="/user">
                   <img
                     className="hidden h-8 w-auto lg:block"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                    src="/logo.png"
                     alt="Logo"
                   /></a>
                 </div>
