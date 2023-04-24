@@ -45,10 +45,17 @@ const Navbar: React.FC = () => {
                   <a href="/hub">
                   <img
                     className="block h-8 w-auto lg:hidden"
+<<<<<<< Updated upstream
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                     alt="Your Company"
                   /> </a>
                   <a href="/hub">
+=======
+                    src="../../public/logo_chatOverflow.png"
+                    alt="Logo"
+                  /></a>
+                  <a href="/user">
+>>>>>>> Stashed changes
                   <img
                     className="hidden h-8 w-auto lg:block"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
