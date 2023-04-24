@@ -5,5 +5,10 @@ export type UserChat = {
         firstname: string;
         lastname: string;
         nickname: string;
-    }[]
+    }[];
+    lastMessage: {
+        message: string;
+        time: Date;
+        read: boolean;
+    };
 }

@@ -20,7 +20,7 @@ const createChat = async (user1: string, user2: string): Promise<Chat> => {
 
     if(chatExists) return chatExists;
 
-    const chatObj: Chat = {chatid: 0, users: [user1Exists, user2Exists] };
+    const chatObj: Chat = {chatid: 0, users: [user1Exists, user2Exists]};
     return chatDB.createChat(chatObj);
 };
 

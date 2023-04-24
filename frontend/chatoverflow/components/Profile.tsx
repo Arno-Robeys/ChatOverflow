@@ -16,7 +16,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
 
     useEffect(() => {
         (async () => {
-            const response = await fetch(`http://localhost:3000/user/${profileUserId}/profile`, { method: 'GET' });
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${profileUserId}/profile`, { method: 'GET' });
             const data = await response.json();
             const filteredProfileData = Object.fromEntries(
                 Object.entries(data.profile || {})
@@ -30,7 +30,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
     const router = useRouter();
 
     const handleChatClick = async (): Promise<void> => {
-        const response = await fetch('http://localhost:3000/chat/create', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/create`, {
             method: 'POST',
             body: JSON.stringify({ user1: loggedInUserId, user2: profileUserId }),
             headers: { 'Content-Type': 'application/json' },

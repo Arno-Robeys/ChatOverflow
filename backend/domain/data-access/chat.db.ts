@@ -27,7 +27,7 @@ const getChatById = async (chatid: number): Promise<Chat> => {
 };
 
 const getAllChatsByUserId = async (userid: number): Promise<Chat[]> => {
-  const chats = await database.chat.findMany({ where: { users: { some: { userid: userid } } }, include: { users: true } });
+  const chats = await database.chat.findMany({ where: { users: { some: { userid: userid } } }, include: { users: true, Message: { orderBy: { time: 'desc' }, take: 1 } } });
   if (!chats) throw new Error('No chat found');
   return chats.map((chat) => ChatMapper.toDomain(chat));
 };
