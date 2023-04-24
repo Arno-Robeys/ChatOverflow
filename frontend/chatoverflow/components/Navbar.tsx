@@ -7,7 +7,6 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import React from 'react'
 import SideBar from './Sidebar'
-import Chats from './Chats'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -24,6 +23,12 @@ const Navbar: React.FC = () => {
     toast.success('Logged out successfully');
   }
 
+  const [isOpen, setIsOpen] = useState(false)
+
+  function closeModal() {
+    setIsOpen(false)
+  }
+
   return (
     <Disclosure as="nav" className="border-b-4">
       {({ open }) => (
@@ -32,11 +37,11 @@ const Navbar: React.FC = () => {
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <Disclosure.Button onClick={() => setIsOpen(isOpen => !isOpen)} className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
-                  {open ? (
+                  {isOpen ? (
                     <><XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                  <Transition as={Fragment}
+                  <Transition as={Fragment} appear show={isOpen}
                     enter="transition ease-out duration-100"
                     enterFrom="transform opacity-0 scale-95"
                     enterTo="transform opacity-100 scale-100"
@@ -44,7 +49,7 @@ const Navbar: React.FC = () => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95">
                     <Disclosure.Panel onClick={(e) => e.stopPropagation()} className="fixed inset-0 z-50 top-16 mt-1 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <SideBar/>
+                      <SideBar method={closeModal}/>
                     </Disclosure.Panel>
                   </Transition>
                     </>

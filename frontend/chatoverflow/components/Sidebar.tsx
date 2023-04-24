@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
 
 
-const SideBar: React.FC = () => {
+const SideBar: React.FC<{method?: () => void}> = ({method}) => {
 
   interface User {
     userid: number;
@@ -25,7 +25,7 @@ const SideBar: React.FC = () => {
       setSearchResults([]);
     } else {
       setIsSearching(true);
-      const response = await fetch('http://localhost:3000/user/find/'+ event.target.value, {method: 'GET'});
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/find/${event.target.value}`, {method: 'GET'});
       if(response.ok){
         const users = await response.json();
         setSearchResults(users.allUsers);
@@ -60,8 +60,10 @@ const SideBar: React.FC = () => {
                  :
                 <div className="divide-y divide-gray-200">
                     {searchResults.map((user) => {
+
+
                         return (
-                          <div key={user.userid} className='w-full text-left py-2 hover:bg-gray-100'>
+                          <div onClick={method} key={user.userid} className='w-full text-left py-2 hover:bg-gray-100'>
                             <Link href={`/user/profile?id=${user.userid}`}>
                                 <div className="flex items-center">
                                 <UserCircleIcon className="h-10 w-10 text-gray-300" aria-hidden="true" />
@@ -78,7 +80,7 @@ const SideBar: React.FC = () => {
             </div>
     </div>
     </section> 
-    : <Chats/>}
+    : <Chats method={method}/>}
     </>)
 }
 

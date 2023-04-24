@@ -18,7 +18,7 @@ const Register: React.FC = () => {
             return;
         }
 
-        const response = await fetch('http://localhost:3000/user/registreer', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/registreer`, {
             method: 'POST',
             body: JSON.stringify({firstname: user.firstname, lastname: user.lastname, email: user.email, password: user.password}),
             headers: { 'Content-Type': 'application/json' }
@@ -26,7 +26,7 @@ const Register: React.FC = () => {
 
         var data = await response.json();
 
-        const response2 = await fetch(`http://localhost:3000/profile/createprofile`, {
+        const response2 = await fetch(`${process.env.NEXT_PUBLIC_URL}/profile/createprofile`, {
             method: 'POST',
             body: JSON.stringify({userid: data.user.userid}),
             headers: { 'Content-Type': 'application/json' }
@@ -42,7 +42,7 @@ const Register: React.FC = () => {
     };
 
     const emailAvailable = async (email: string): Promise<Boolean> => {
-        const response = await fetch(`http://localhost:3000/user`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user`);
         const data = await response.json();
         return data.every((user: any) => user.email !== email);
     }

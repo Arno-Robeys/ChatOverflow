@@ -1,20 +1,16 @@
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { UserChat } from "@/types/userchat.type";
 
 const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
   const { data: session } = useSession();
-  if(!session) return (<div>Not logged in</div>);
-  const [data, setData] = useState<UserChat>();
+  if(!session) return (<div>Not logged in</div>);;
   const [otherUser, setOtherUser] = useState<any>();
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:3000/chat/${chatId}`, { method: 'GET' });
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/${chatId}`, { method: 'GET' });
       const data = await response.json();
-      setData(data);
-
       const user = data.users.find((user: { userid: number; }) => user.userid !== parseInt(session?.user.id));
       setOtherUser(user);
     })();

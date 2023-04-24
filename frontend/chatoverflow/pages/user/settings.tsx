@@ -17,12 +17,10 @@ const userSettings: React.FC = () => {
 
   useEffect(() => {
   (async () => {
-    const response = await fetch(`http://localhost:3000/user/${loggedInUserId}/profile`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${loggedInUserId}/profile`);
     var data = await response.json();
     setUser(data);
   })()},[]);
-
-
 
   const inputRefs = Array.from({ length: 7 }).map(() => useRef<HTMLInputElement>(null));
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -32,7 +30,7 @@ const userSettings: React.FC = () => {
     const [firstnameInput, lastnameInput, nicknameInput, hobbyInput, educationInput, workInput, tagsInput] = inputRefs.map((ref) => ref.current);
     const descriptionInput = descriptionRef.current;
 
-    const response = await fetch(`http://localhost:3000/user/update`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/update`, {
       method: 'PUT',
       body: JSON.stringify({
         firstname: firstnameInput?.value,
