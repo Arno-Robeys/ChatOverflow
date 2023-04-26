@@ -11,12 +11,13 @@ export class NotificationMapper {
             chatid: prismaNotification.chatid,
             messageid: prismaNotification.messageid,
             notificationid: prismaNotification.notificationid,
+            read: prismaNotification.read,
             message: prismaNotification.message ? MessageMapper.toDomain(prismaNotification.message) : undefined
         })
     }
 
     static toPersistence(notification: Notification): Omit<PrismaNotification,'notificationid'> {
-        return { userid: notification.userid, chatid: notification.chatid, messageid: notification.messageid }
+        return { userid: notification.userid, chatid: notification.chatid, read: notification.read, messageid: notification.messageid }
     }
 
 }

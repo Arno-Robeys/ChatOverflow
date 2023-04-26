@@ -28,6 +28,7 @@ const swaggerSpec = swaggerJSDoc(swaggerOpts);
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.get("/status", (req, res) => {
   res.json({ message: "Back-end is running..." });

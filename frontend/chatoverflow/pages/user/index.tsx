@@ -1,8 +1,9 @@
 import { useSession } from "next-auth/react";
 import SideBar from "@/components/Sidebar";
 
-const UserHome: React.FC = () => {
+const UserHome: React.FC<{chatChanged?: boolean}> = ({chatChanged}) => {
     const { data: session } = useSession();
+
 
     return (
         // main container

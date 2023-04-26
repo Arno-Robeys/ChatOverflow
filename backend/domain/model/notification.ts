@@ -6,6 +6,7 @@ export class Notification {
     readonly chatid: number;
     readonly messageid: number;
     readonly message?: Message;
+    readonly read: boolean;
 
     constructor(notification: {
         userid: number;
@@ -13,12 +14,14 @@ export class Notification {
         messageid: number;
         notificationid: number;
         message?: Message;
+        read?: boolean;
     }) {
         this.notificationid = notification.notificationid;
         this.userid = notification.userid;
         this.chatid = notification.chatid;
         this.messageid = notification.messageid;
         this.message = notification.message;
+        this.read = notification.read;
     }
     
 

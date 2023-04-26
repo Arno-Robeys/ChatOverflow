@@ -26,11 +26,18 @@ const getChatById = async (chatid: number): Promise<Chat> => {
   return ChatMapper.toDomain(chat);
 };
 
-const getAllChatsByUserId = async (userid: number): Promise<Chat[]> => {
-  const chats = await database.chat.findMany({ where: { users: { some: { userid: userid } } }, include: { users: true, Message: { orderBy: { time: 'desc' }, take: 1 } } });
-  if (!chats) throw new Error('No chat found');
-  return chats.map((chat) => ChatMapper.toDomain(chat));
-};
+  const getAllChatsByUserId = async (userid: number): Promise<Chat[]> => {
+    const chats = await database.chat.findMany({ where: { users: { some: { userid: userid } } }, include: { users: true, Message: { orderBy: { time: 'desc' }, take: 1 } } });
+    if (!chats) throw new Error('No chat found');
+    chats.sort((a, b) => {
+      if(a.Message[0] == undefined) return 1;
+      if(b.Message[0] == undefined) return -1;
+      if (a.Message[0].time > b.Message[0].time) return -1;
+      if (a.Message[0].time < b.Message[0].time) return 1;
+      return 0;
+    });
+    return chats.map((chat) => ChatMapper.toDomain(chat));
+  };
 
 const deleteChat = async (chatid: number): Promise<boolean> => {
   try {

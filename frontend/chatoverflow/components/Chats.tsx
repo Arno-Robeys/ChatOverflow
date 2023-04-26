@@ -2,40 +2,58 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link'
 import{ useState,useEffect } from 'react'
 import { UserChat } from "@/types/userchat.type";
+import moment from 'moment';
+import { pusher } from "../pusher"
 
-const Chats: React.FC<{ props?: string | string[], method?: () => void }> = ({props, method}) => {
+const Chats: React.FC<{method?: () => void }> = ({method}) => {
 
     const { data: session } = useSession();
     if(!session) return (<div>Not logged in</div>);
     const [chats, setChats] = useState<UserChat[]>([]);
 
+    const fetchData = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/user/${session?.user.id}`, {method: 'GET'});
+      const data = await response.json();
+      setChats(data);
+    }
+
     useEffect(() => {
-        (async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/user/${session?.user.id}`, {method: 'GET'});
-            const data = await response.json();
-            setChats(data);
-        })();
-    }, [])
+      fetchData();
+    }, [session?.user.id]);
+
+    useEffect(() => {
+      chats.forEach(chat => {
+        const channel = pusher.subscribe(`updateChats${chat.chatid}`);
+        channel.bind('message', function(data: any) {
+          fetchData()
+        });
+      });
+      return () => {
+        chats.forEach(chat => {
+          pusher.unsubscribe(`updateChats${chat.chatid}`);
+        });
+      };
+    }, [chats, session?.user.id]);
+
 
     const converter = (date: Date) => {
-        const date1 = new Date(date);
-        const today = new Date();
-        const diff = Math.abs(today.getTime() - date1.getTime());
-        const diffMinutes = Math.ceil(diff / (1000 * 60));
-        const diffHours = Math.ceil(diff / (1000 * 3600));
-        const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-        const diffWeeks = Math.ceil(diff / (1000 * 3600 * 24 * 7));
-      
-        if (diffMinutes < 60) {
-          return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
-        } else if (diffHours < 24) {
-          return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-        } else if (diffDays < 7) {
-          return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-        } else {
-          return `${diffWeeks} week${diffWeeks > 1 ? 's' : ''} ago`;
+        const date1 = moment(date);
+        const today = moment()
+        const duration = moment.duration(today.diff(date1));
+
+        if(duration.asDays() < 1) {
+            return duration.humanize() + " ago";
         }
-      };
+        else if(duration.asDays() < 2) {
+            return "Yesterday";
+        }
+        else if(duration.asDays() < 7) {
+            return date1.format("dddd");
+        }
+        else {
+            return date1.format("DD/MM/YYYY");
+        }
+    }
       
 
   return (
@@ -54,13 +72,19 @@ const Chats: React.FC<{ props?: string | string[], method?: () => void }> = ({pr
                     {chats.map((chat) =>  {
                         var user = chat.users.find(user => user.userid !== parseInt(session?.user.id));
                         return (
-                        <div onClick={method} key={chat.chatid} className="w-full text-left py-2 hover:bg-gray-100">
+                        <div onClick={method} key={chat.chatid} className="w-full text-left hover:bg-gray-100">
                             <Link href={`/chat/${chat.chatid}`}>
-                                <div className="flex items-center">
+                                <div className="flex items-center py-2">
                                     <img className="rounded-full items-start flex-shrink-0 mr-3" width="32" height="32" />
                                     <div>
-                                        <h4 className="text-sm font-semibold text-gray-900">{user?.nickname ? user.nickname : user?.firstname + " " + user?.lastname}</h4>
-                                        {chat.lastMessage ? <div className="text-[13px]">{chat.lastMessage?.message} · {converter(chat.lastMessage?.time)}</div> : null}
+                                    <h4 className="text-sm font-semibold text-gray-900">{user?.nickname ? user.nickname : user?.firstname + " " + user?.lastname}</h4>
+                                    {chat.lastMessage ? (
+                                    <div className="text-[13px]">
+                                      {chat.lastMessage?.message.length > 50
+                                        ? chat.lastMessage?.message.substring(0, 35) + "..."
+                                        : chat.lastMessage?.message} · {converter(chat.lastMessage?.time)}
+                                    </div>
+                                    ) : null}
                                     </div>
                                 </div>
                             </Link>
