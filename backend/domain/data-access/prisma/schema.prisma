@@ -23,7 +23,6 @@ model Message {
   userid       Int
   message      String
   time         DateTime       @default(now())
-  read         Boolean        @default(false)
   chat         Chat           @relation(fields: [chatid], references: [chatid])
   user         User           @relation(fields: [userid], references: [userid])
   Notification Notification[]
@@ -34,6 +33,7 @@ model Notification {
   userid         Int
   chatid         Int
   messageid      Int
+  read           Boolean  @default(false)
   user           User     @relation(fields: [userid], references: [userid])
   chat           Chat     @relation(fields: [chatid], references: [chatid])
   message        Message  @relation(fields: [messageid], references: [messageid])

@@ -35,6 +35,7 @@
 import express from "express";
 import messageService from "../service/message.service";
 const router = express.Router();
+import { pusherServer } from "../pusher"
 
 
 /**
@@ -177,6 +178,13 @@ router.post("/send", async (req, res) => {
     const data = req.body
     try {
         const messages = await messageService.createMessage(data);
+        pusherServer.trigger(`chat${data.chatid}`, "message", {
+            message: messages.message,
+            userid: messages.userid,
+            time: messages.time,
+            messageid: messages.messageid,
+        });
+        pusherServer.trigger(`updateChats${data.chatid}`, "message", "message sent")
         res.status(200).json(messages)
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})

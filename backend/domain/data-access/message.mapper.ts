@@ -7,7 +7,6 @@ export class MessageMapper {
             userid: prismaMessage.userid,
             message: prismaMessage.message,
             time: prismaMessage.time,
-            read: prismaMessage.read,
             chatid: prismaMessage.chatid,
             messageid: prismaMessage.messageid
         })
@@ -15,7 +14,7 @@ export class MessageMapper {
     }
 
     static toPersistence(message: Message): Omit<PrismaMessage,'messageid'> {
-        return { userid: message.userid, message: message.message, time: message.time, read: message.read, chatid: message.chatid }        
+        return { userid: message.userid, message: message.message, time: message.time, chatid: message.chatid }        
     }
 
 }

@@ -5,11 +5,18 @@ import { useRouter } from 'next/router'
 import { SessionProvider } from 'next-auth/react';
 import AuthWrapper from '@/components/AuthWrapper';
 import { Toaster } from 'react-hot-toast';
+import { useState } from 'react';
 
 const publicPages = ["/auth", "/"];
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const isPublicPage = publicPages.includes(router.pathname);
+
+  const [chatChanged, setChatChanged] = useState<boolean>(false);
+
+  const changeChat = () => {
+    setChatChanged((prev) => !prev);
+  }
 
   return (
   <>
@@ -21,7 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
         ) : (
           <AuthWrapper>
             <Navbar />
-            <Component {...pageProps} />
+            <Component {...{changeChat, chatChanged, ...pageProps}}/>
           </AuthWrapper>
         )}
       </div>

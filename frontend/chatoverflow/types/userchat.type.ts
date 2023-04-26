@@ -9,6 +9,5 @@ export type UserChat = {
     lastMessage: {
         message: string;
         time: Date;
-        read: boolean;
     };
 }
