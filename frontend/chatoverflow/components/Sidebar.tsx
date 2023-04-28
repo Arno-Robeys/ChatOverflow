@@ -13,6 +13,9 @@ const SideBar: React.FC<{method?: () => void}> = ({method}) => {
     lastname: string;
     nickname: string;
     email: string;
+    profile: {
+      avatar: string;
+    };
   }
 
   const [isSearching, setIsSearching] = useState(false);
@@ -66,7 +69,7 @@ const SideBar: React.FC<{method?: () => void}> = ({method}) => {
                           <div onClick={method} key={user.userid} className='w-full text-left py-2 hover:bg-gray-100'>
                             <Link href={`/user/profile?id=${user.userid}`}>
                                 <div className="flex items-center">
-                                <UserCircleIcon className="h-10 w-10 text-gray-300" aria-hidden="true" />
+                                <img className="rounded-full items-start flex-shrink-0 mr-3" width="32" height="32" src={user?.profile?.avatar ? user.profile.avatar : "/default-avatar.png"} />
                                     <div>
                                       <h4 className="text-sm font-semibold text-gray-900">{user.nickname ? user.nickname : user.firstname + ' ' + user.lastname}</h4>
                                     </div>

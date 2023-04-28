@@ -1,33 +1,35 @@
 import { UserProfile } from '@/types/userprofile.type';
-import { UserCircleIcon } from '@heroicons/react/24/solid'
+import { Disclosure, Transition } from '@headlessui/react'
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FormEventHandler, useEffect, useRef, useState } from 'react';
+import { FormEventHandler, Fragment, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { WithContext as ReactTags, Tag } from 'react-tag-input';
 
 const userSettings: React.FC = () => {
-
-  const [user, setUser] = useState<UserProfile>();
-
   const { data: session } = useSession();
   const router = useRouter();
   if(!session) return null;
   const loggedInUserId = session.user.id;
-  
+
+  const [user, setUser] = useState<UserProfile>();
   const [tags, setTags] = useState<Tag[]>([]);
+  const inputRefs = Array.from({ length: 6 }).map(() => useRef<HTMLInputElement>(null));
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const avatars = require.context('../../public/avatars/', true, /^\.\/.*\.png$/).keys().filter((path: string) => path.startsWith('./')).map((path: string) => '/avatars' + path.substring(1))
 
   useEffect(() => {
   (async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${loggedInUserId}/profile`);
     var data = await response.json();
     setUser(data);
-    setTags(data?.profile?.tags?.split(', ').map((tag: string) => ({id: tag, text: tag})));
+    setTags(data?.profile?.tags?.split(", ").map((tag: string) => {
+          if (!tag.trim()) return null;
+          return { id: tag, text: tag };
+        }).filter((tag: string) => tag !== null));
   })()},[]);
-
-  const inputRefs = Array.from({ length: 6 }).map(() => useRef<HTMLInputElement>(null));
-  const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit : FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -42,6 +44,7 @@ const userSettings: React.FC = () => {
         nickname: nicknameInput?.value,
         profile: {  
           description: descriptionInput?.value,
+          avatar: selectedAvatar,
           hobby: hobbyInput?.value,
           work: workInput?.value,
           education: educationInput?.value,
@@ -52,7 +55,8 @@ const userSettings: React.FC = () => {
       headers: { 'Content-Type': 'application/json' }
     });
 
-    if(response.ok) {
+    if(response.ok) {     
+      sessionStorage.setItem('avatar', selectedAvatar as string);
       router.push(`/user/profile`);
       toast.success('Profile Updated!');
     } else {
@@ -69,6 +73,10 @@ const userSettings: React.FC = () => {
     setTags([...tags, tag]);
   };
 
+  useEffect(() => {
+    setUser({...user as UserProfile, profile: {...user?.profile as any, avatar: selectedAvatar}});
+  }, [selectedAvatar]);
+
   return (
     <div className="flex justify-center py-4">
     <form className="w-11/12 sm:w-8/12" onSubmit={handleSubmit}>
@@ -78,13 +86,37 @@ const userSettings: React.FC = () => {
             This information will be displayed publicly so be careful what you share.
           </p>
             <div className="col-span-full flex flex-col items-center">
-                <div className="mt-2 flex flex-col items-center">
-                    <UserCircleIcon className="h-48 w-48 text-gray-300" aria-hidden="true" />
-                    <label htmlFor="photoUpload" className="mt-2 rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm cursor-pointer hover:bg-gray-50">
-                    Change
-                    <input type="file" id="photoUpload" className="sr-only" />
-                    </label>
-                </div>
+              <Disclosure>
+                {({ open }) => (
+                  <>
+                    <img src={user?.profile?.avatar ? user.profile.avatar : "/default-avatar.png"} alt="avatar" className="h-40 w-40 rounded-full" />   
+                    <Disclosure.Button  className="mt-2 rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm"> 
+                  {open ? (
+                    <>
+                      <div>Profile Avatars</div>
+                      <Transition as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95">
+                        <Disclosure.Panel className="rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 mt-2">
+                        <div className="flex flex-wrap justify-center">
+                        {avatars.map((avatar, index) => (
+                          <img key={index} src={avatar} alt="avatar" className="h-20 w-20 rounded-full m-2 cursor-pointer" onClick={() => setSelectedAvatar(avatar)} />
+                        ))}
+                      </div>
+                        </Disclosure.Panel>
+                      </Transition>
+                    </>
+                  ) : (
+                    <div>Chose Avatar</div>
+                  )}
+                </Disclosure.Button>
+                  </>
+                )}
+              </Disclosure>
             </div>
 
 
@@ -124,7 +156,7 @@ const userSettings: React.FC = () => {
 
             <div className="mt-4">
                 <label htmlFor="tags" className="block text-sm font-medium leading-6 text-gray-900">Tags</label>
-                <ReactTags tags={tags} delimiters={[188, 13]} handleDelete={handleDelete} handleAddition={handleAddition} inputFieldPosition="top" maxLength={30} classNames={{tagInputField: 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6', tag: "mr-1.5 p-1 rounded-md bg-gray-200", selected: "mt-3"}} autocomplete/>
+                <ReactTags tags={tags} autofocus={false} delimiters={[188, 13]} handleDelete={handleDelete} handleAddition={handleAddition} inputFieldPosition="top" maxLength={30} classNames={{tagInputField: 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6', tag: "mr-1.5 p-1 rounded-md bg-gray-200", selected: "mt-3"}}/>
             </div>
         </div>
 

@@ -22,7 +22,7 @@ const getAllUsersByName = async ({name}: {name: string}): Promise<User[]> => {
         { AND: [
             { firstname: { contains: name.split(' ')[0], mode: "insensitive" } },
             { lastname: { contains: name.split(' ')[1], mode: "insensitive" } },
-          ]}]}})
+          ]}]}, include: { profile: true }})
   if(!users) throw new Error("No users found");
   return users.map((user) => UserMapper.toDomain(user));
 }

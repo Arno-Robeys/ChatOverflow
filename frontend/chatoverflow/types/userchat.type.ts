@@ -5,6 +5,9 @@ export type UserChat = {
         firstname: string;
         lastname: string;
         nickname: string;
+        profile: {
+            avatar: string | null;
+        }
     }[];
     lastMessage: {
         message: string;
