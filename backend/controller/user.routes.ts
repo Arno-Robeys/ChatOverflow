@@ -337,8 +337,7 @@ router.put("/update", async (req, res) => {
         const updatedUser = await userService.updateUser({id: userid}, {data: changed})
         res.status(200).json({status: "success", updatedUser})
     } catch(error) {
-        console.log(error)
-        res.status(500).json({status: 'error', errorMessage: error.message})
+        res.status(500).json({status: 'error', errorMessage: error.message || "Something went wrong"})
     }
 })
 

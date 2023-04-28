@@ -41,7 +41,7 @@ model Notification {
 
 model Profile {
   userid      Int     @unique
-  description String? 
+  description String? @db.VarChar(400)
   avatar      String? 
   work        String?
   hobby       String?
