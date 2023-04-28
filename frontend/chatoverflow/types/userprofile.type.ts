@@ -5,7 +5,7 @@ export type UserProfile = {
     nickname: string;
     email: string;
     profile: {
-        avatar: string;
+        avatar: string | null;
         description: string;
         education: string;
         hobby: string;

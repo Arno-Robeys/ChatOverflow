@@ -59,7 +59,7 @@ const Chats: React.FC<{method?: () => void }> = ({method}) => {
   return (
     <section className="flex flex-col antialiased bg-gray-50 text-gray-600 h-full">
     <div>
-            <div className="sm:py-3 sm:px-5">
+            <div className="py-3 px-5">
                 <h3 className="text-xs font-semibold uppercase text-gray-400 mb-1">Chats</h3>
 
                 {chats.length === 0 ? 
@@ -75,7 +75,7 @@ const Chats: React.FC<{method?: () => void }> = ({method}) => {
                         <div onClick={method} key={chat.chatid} className="w-full text-left hover:bg-gray-100">
                             <Link href={`/chat/${chat.chatid}`}>
                                 <div className="flex items-center py-2">
-                                    <img className="rounded-full items-start flex-shrink-0 mr-3" width="32" height="32" />
+                                    <img className="rounded-full items-start flex-shrink-0 mr-3" width="32" height="32" src={user?.profile?.avatar ? user.profile.avatar : "/default-avatar.png"} />
                                     <div>
                                     <h4 className="text-sm font-semibold text-gray-900">{user?.nickname ? user.nickname : user?.firstname + " " + user?.lastname}</h4>
                                     {chat.lastMessage ? (

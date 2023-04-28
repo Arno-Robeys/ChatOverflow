@@ -62,7 +62,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
         <div className="flex-1 p:2 pb-20 justify-between flex flex-col h-screen">
           <div className="flex sm:items-center justify-between p-3 border-b-2 border-gray-200">
               <div className="relative flex items-center space-x-4">
-                <img src="" alt="" className="w-10 sm:w-12 h-10 sm:h-12 rounded-full"></img>
+                <img src={otherUser?.profile?.avatar ? otherUser.profile.avatar : "/default-avatar.png"} alt="" className="w-10 sm:w-12 h-10 sm:h-12 rounded-full"/>
                 <div className="flex flex-col leading-tight">
                     <div className="text-2xl mt-1 flex items-center">
                       <span className="text-gray-700 mr-3">

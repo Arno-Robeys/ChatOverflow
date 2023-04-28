@@ -1,9 +1,18 @@
 import { useSession } from "next-auth/react";
 import SideBar from "@/components/Sidebar";
+import { useEffect } from "react";
 
 const UserHome: React.FC<{ chatChanged?: boolean }> = ({ chatChanged }) => {
     const { data: session } = useSession();
 
+    useEffect(() => {
+        async function fetchData() {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${session?.user.id}/profile`);
+            const data = await response.json();
+            sessionStorage.setItem('avatar', data.profile.avatar ?? 'default-avatar.png');
+        }
+        fetchData();
+    }, [session?.user.id]);
 
     return (
         // main container

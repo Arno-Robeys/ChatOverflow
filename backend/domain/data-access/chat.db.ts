@@ -21,13 +21,13 @@ const getAllChats = async (): Promise<Chat[]> => {
 };
 
 const getChatById = async (chatid: number): Promise<Chat> => {
-  const chat = await database.chat.findUnique({ where: { chatid: chatid }, include: { users: true } });
+  const chat = await database.chat.findUnique({ where: { chatid: chatid }, include: { users: {include: {profile: true}} } });
   if (!chat) throw new Error('No chat found');
   return ChatMapper.toDomain(chat);
 };
 
   const getAllChatsByUserId = async (userid: number): Promise<Chat[]> => {
-    const chats = await database.chat.findMany({ where: { users: { some: { userid: userid } } }, include: { users: true, Message: { orderBy: { time: 'desc' }, take: 1 } } });
+    const chats = await database.chat.findMany({ where: { users: { some: { userid: userid } } }, include: { users: {include: {profile: true}}, Message: { orderBy: { time: 'desc' }, take: 1 } } });
     if (!chats) throw new Error('No chat found');
     chats.sort((a, b) => {
       if(a.Message[0] == undefined) return 1;

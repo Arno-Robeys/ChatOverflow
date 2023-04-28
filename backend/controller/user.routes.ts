@@ -44,8 +44,6 @@
 import express from "express";
 import { User } from "../domain/model/user";
 import userService from "../service/user.service";
-import profileService from "../service/profile.service";
-import { Profile } from "../domain/model/profile";
 const router = express.Router();
 
 

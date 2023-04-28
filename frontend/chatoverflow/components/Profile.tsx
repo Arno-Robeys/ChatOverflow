@@ -53,7 +53,11 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                 }
 
                 <div className="flex mt2 flex-col items-center">
-                    <UserCircleIcon className="h-48 w-48 text-gray-300" aria-hidden="true" />
+                    {profile?.profile?.avatar ?
+                        <img className="rounded-full h-40 w-40 items-start flex-shrink-0 mr-3" src={profile?.profile?.avatar} alt="Profile Picture"/>
+                        :
+                        <UserCircleIcon className="h-48 w-48 text-gray-300" aria-hidden="true" />
+                    }
                     {profile?.nickname ?
                         <>
                             <h1 className="text-3xl font-bold text-gray-900">{profile?.nickname}</h1>
@@ -64,7 +68,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                 </div>
 
 
-                {profile?.profile && Object.keys(profile?.profile).length > 0 ?
+                {profile?.profile && Object.keys(profile?.profile).length > 0 && !Object.keys(profile?.profile).includes("avatar") ?
                     <>
                         {profile?.profile.description ?
                             <p className="text-gray-900 mx-2 sm:py-1.5 sm:text-sm sm:leading-6"><strong>Description:</strong> {profile?.profile.description}</p>
