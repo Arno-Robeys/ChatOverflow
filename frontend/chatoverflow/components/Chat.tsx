@@ -88,7 +88,10 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
               <div key={message.messageid} className="chat-message">
               <div className="flex items-end justify-end">
                   <div className="flex flex-col space-y-2 max-w-md mx-2 order-1 items-end">
-                    <div><span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white ">{message.message}</span></div>
+                    <div className='pl-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white '>
+                      <span>{message.message}</span>
+                      <a className='p-2 pr-3 text-xl'>&#8942;</a>
+                    </div>
                   </div>
               </div>
             </div> :
