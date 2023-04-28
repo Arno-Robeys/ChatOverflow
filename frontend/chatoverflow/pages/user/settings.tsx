@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEventHandler, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { WithContext as ReactTags, Tag } from 'react-tag-input';
 
 const userSettings: React.FC = () => {
 
@@ -14,20 +15,23 @@ const userSettings: React.FC = () => {
   const router = useRouter();
   if(!session) return null;
   const loggedInUserId = session.user.id;
+  
+  const [tags, setTags] = useState<Tag[]>([]);
 
   useEffect(() => {
   (async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${loggedInUserId}/profile`);
     var data = await response.json();
     setUser(data);
+    setTags(data?.profile?.tags?.split(', ').map((tag: string) => ({id: tag, text: tag})));
   })()},[]);
 
-  const inputRefs = Array.from({ length: 7 }).map(() => useRef<HTMLInputElement>(null));
+  const inputRefs = Array.from({ length: 6 }).map(() => useRef<HTMLInputElement>(null));
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit : FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    const [firstnameInput, lastnameInput, nicknameInput, hobbyInput, educationInput, workInput, tagsInput] = inputRefs.map((ref) => ref.current);
+    const [firstnameInput, lastnameInput, nicknameInput, hobbyInput, educationInput, workInput] = inputRefs.map((ref) => ref.current);
     const descriptionInput = descriptionRef.current;
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/update`, {
@@ -41,7 +45,7 @@ const userSettings: React.FC = () => {
           hobby: hobbyInput?.value,
           work: workInput?.value,
           education: educationInput?.value,
-          tags: tagsInput?.value,
+          tags: tags.map((tag: any) => tag.text).join(', '),
         },
         userid: loggedInUserId
       }),
@@ -54,6 +58,15 @@ const userSettings: React.FC = () => {
     } else {
       toast.error((await response.json()).errorMessage);
     }
+  };
+
+  const handleDelete = (i: any) => {
+    setTags(tags.filter((tag: any, index: any) => index !== i));
+  };
+
+  const handleAddition = (tag: any) => {
+    if(tag.text.length > 30) return;
+    setTags([...tags, tag]);
   };
 
   return (
@@ -111,7 +124,7 @@ const userSettings: React.FC = () => {
 
             <div className="mt-4">
                 <label htmlFor="tags" className="block text-sm font-medium leading-6 text-gray-900">Tags</label>
-                <input type="text" defaultValue={user?.profile.tags || ""} ref={inputRefs[6]} name="tags" id="tags" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+                <ReactTags tags={tags} delimiters={[188, 13]} handleDelete={handleDelete} handleAddition={handleAddition} inputFieldPosition="top" maxLength={30} classNames={{tagInputField: 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6', tag: "mr-1.5 p-1 rounded-md bg-gray-200", selected: "mt-3"}} autocomplete/>
             </div>
         </div>
 
