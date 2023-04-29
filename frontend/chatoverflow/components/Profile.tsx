@@ -68,7 +68,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                 </div>
 
 
-                {profile?.profile && Object.keys(profile?.profile).length > 0 && !Object.keys(profile?.profile).includes("avatar") ?
+                {profile?.profile && Object.keys(profile?.profile).length > 0  ?
                     <>
                         {profile?.profile.description ?
                             <p className="text-gray-900 mx-2 sm:py-1.5 sm:text-sm sm:leading-6"><strong>Description:</strong> {profile?.profile.description}</p>
