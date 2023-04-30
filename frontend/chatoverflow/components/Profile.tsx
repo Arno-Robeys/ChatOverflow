@@ -67,7 +67,6 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                     }
                 </div>
 
-
                 {profile?.profile && Object.keys(profile.profile).some(key => key !== 'avatar')?
                     <>
                         {profile?.profile.description ?
