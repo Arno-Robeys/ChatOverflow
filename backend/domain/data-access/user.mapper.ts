@@ -19,16 +19,8 @@ export class UserMapper {
 
 
     static toPersistence(user: User & { profile?: Profile}): Omit<PrismaUser, 'userid'> {
-        const userData = { 
-          userid: user.userid,
-          firstname: user.firstname, 
-          lastname: user.lastname, 
-          password: user.password, 
-          nickname: user.nickname, 
-          email: user.email 
-        };
         const profileData = user.profile ? { profile: { update: ProfileMapper.toPersistence(user.profile) } } : {};
-        return { ...userData, ...profileData };
+        return {firstname: user.firstname, lastname: user.lastname, password: user.password, nickname: user.nickname, email: user.email, ...profileData};
       }
 
 }

@@ -13,7 +13,7 @@ const getAllMessages = async (): Promise<Message[]> => {
 }
 
 const getAllMessagesByChatId = async ({chatid}: {chatid: number}): Promise<Message[]> => {
-    const messages = await database.message.findMany({where: {chatid: chatid}})
+    const messages = await database.message.findMany({where: {chatid: chatid}, orderBy: { time: 'asc' }})
     if(!messages) throw new Error("No messages found");
     return messages.map((message) => MessageMapper.toDomain(message));
 }
@@ -25,7 +25,7 @@ const getMessageById = async ({id}: {id: number}): Promise<Message> => {
 }
 
 const deleteMessageById = async ({id}: {id: number}): Promise<boolean> => {
-    return Boolean(await database.message.delete({ where: { messageid: id } }));
+    return Boolean(await database.notification.deleteMany({where: { messageid: id }}) && await database.message.delete({ where: { messageid: id } }));
 }
 
 const updateMessage = async ({ id }: { id: number },{ data }: { data: Partial<Message> }): Promise<Message> => {

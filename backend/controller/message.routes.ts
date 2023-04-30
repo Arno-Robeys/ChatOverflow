@@ -177,15 +177,10 @@ router.get("/:messageid", async (req, res) => {
 router.post("/send", async (req, res) => {
     const data = req.body
     try {
-        const messages = await messageService.createMessage(data);
-        pusherServer.trigger(`chat${data.chatid}`, "message", {
-            message: messages.message,
-            userid: messages.userid,
-            time: messages.time,
-            messageid: messages.messageid,
-        });
+        const message = await messageService.createMessage(data);
+        pusherServer.trigger(`chat${data.chatid}`, "message", "message sent");
         pusherServer.trigger(`updateChats${data.chatid}`, "message", "message sent")
-        res.status(200).json(messages)
+        res.status(200).json(message)
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})
     }
@@ -222,11 +217,13 @@ router.post("/send", async (req, res) => {
  *         description: Internal server error
  */
 router.put("/update", async (req, res) => {
-    const {messageid , ...data} = req.body
+    const {messageid, chatid , ...data} = req.body
     try {
         const messages = await messageService.updateMessage({id: messageid}, {data: data});
+        pusherServer.trigger(`chat${chatid}`, "message", "message update");
         res.status(200).json(messages)
     } catch(error) {
+        console.log(error)
         res.status(500).json({status: 'error', errorMessage: error.message})
     }
 })
@@ -259,6 +256,8 @@ router.delete("/delete/:messageid", async (req, res) => {
     const messageid = req.params.messageid
     try {
         const messages = await messageService.deleteMessageById({id: messageid});
+        pusherServer.trigger(`chat${req.body.chatid}`, "message", "message deleted");
+        pusherServer.trigger(`updateChats${req.body.chatid}`, "message", "message deleted")
         res.status(200).json(messages)
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})

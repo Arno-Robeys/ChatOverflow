@@ -1,7 +1,8 @@
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { pusher } from '../pusher';
+import { Menu, Transition } from '@headlessui/react';
 
 const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
   const { data: session } = useSession();
@@ -10,6 +11,8 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
   const [otherUser, setOtherUser] = useState<any>();
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState<string>('');
+  const [updateChat, setUpdateChat] = useState<boolean>(false);
+  const [messageEdit, setMessageEdit] = useState({mode:false, messageid : 0});
 
     const sendMessage = async () => {
       if(!input.trim()) return;
@@ -24,7 +27,57 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
           userid: parseInt(session?.user.id)
         })
       });
+
+      const data = await response.json();
+
+      const notification = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/createnotification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          messageid: data.messageid,
+          chatid: data.chatid,
+          userid: otherUser.userid
+        })
+      });
       setInput('');
+    }
+
+    const deleteMessage = async (messageid: number) => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/delete/${messageid}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chatid: chatId
+        })
+      });
+    }
+
+    const editMessage = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          messageid: messageEdit.messageid,
+          message: input,
+          chatid: chatId
+        })
+      });
+
+      if(response.ok) {
+        setMessageEdit({mode: false, messageid: 0});
+        setInput('');
+      }
+    }
+
+    const handleEditMode = (messageid: number, message: string) => {
+      setMessageEdit({mode: true, messageid: messageid});
+      setInput(message);
     }
 
   useEffect(() => {
@@ -32,7 +85,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
       const channel = pusher.subscribe(`chat${chatId}`);
   
       channel.bind('message', function(data: any) {
-        setMessages((messages) => [...messages, data]);
+        setUpdateChat((updateChat) => !updateChat);
       });
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/${chatId}`, { method: 'GET' });
@@ -48,7 +101,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
     return () => {
       pusher.unsubscribe(`chat${chatId}`);
     };
-  }, [chatId, session?.user.id]);
+  }, [chatId, session?.user.id, updateChat]);
 
   const scrollableNodeRef = useRef<HTMLDivElement>(null);
   
@@ -85,15 +138,46 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
           {messages.map((message) =>  {
             return (
               message.userid === parseInt(session?.user.id) ?
+
               <div key={message.messageid} className="chat-message">
-              <div className="flex items-end justify-end">
-                  <div className="flex flex-col space-y-2 max-w-md mx-2 order-1 items-end">
-                    <div className='pl-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white '>
+                <Menu as="div" className="relative ml-3">
+                <div className="flex items-center justify-end">
+                  <Menu.Button className="text-gray-400 hover:text-black p-2">
+                    <a className='text-xl'>&#8942;</a>
+                  </Menu.Button>
+                  <div className="flex flex-col space-y-2 max-w-md mr-2 order-1 items-end">
+                    <div className='px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white '>
                       <span>{message.message}</span>
-                      <a className='p-2 pr-3 text-xl'>&#8942;</a>
                     </div>
                   </div>
-              </div>
+                </div>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-20 bottom-11 z-10 w-24 rounded-md bg-white shadow-lg">
+                      <Menu.Item>
+                        <a onClick={() => handleEditMode(message.messageid, message.message)} className="flex items-center p-2 border-b hover:bg-gray-100">
+                          <p className="text-gray-600 text-sm mx-2">
+                            Edit
+                          </p>
+                        </a>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <a onClick={() => deleteMessage(message.messageid)} className="flex items-center p-2 hover:bg-gray-100">
+                          <p className="text-gray-600 text-sm mx-2">
+                            Delete
+                          </p>
+                        </a>
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
             </div> :
               <div key={message.messageid} className="chat-message">
                 <div className="flex items-end">
@@ -106,6 +190,23 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
 
           </div>
           <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
+              
+                {messageEdit.mode == true ? 
+                <>
+                <p className='font-bold text-sm'>Attention: You are in edit message mode</p>
+                <div className="relative flex">
+                  <input type="text" value={input} onKeyDown={(e) => {e.key === 'Enter' && editMessage()}} placeholder="Write your message!" onChange={(e) => setInput(e.target.value)} className="w-full focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 rounded-md py-3"></input>
+                  <div className="absolute right-0 items-center inset-y-0 flex">
+                      <button type="button" onClick={() => editMessage()} className="inline-flex items-center justify-center rounded-lg px-4 h-full transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none">
+                        <span className="font-bold hidden sm:block">Send</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-6 w-6 ml-2 transform rotate-90">
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                        </svg>
+                      </button>
+                  </div>
+                </div>
+                </>
+              :
               <div className="relative flex">
                 <input type="text" value={input} onKeyDown={(e) => {e.key === 'Enter' && sendMessage()}} placeholder="Write your message!" onChange={(e) => setInput(e.target.value)} className="w-full focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 rounded-md py-3"></input>
                 <div className="absolute right-0 items-center inset-y-0 flex">
@@ -117,6 +218,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
                     </button>
                 </div>
               </div>
+              }
           </div>
         </div>
   )

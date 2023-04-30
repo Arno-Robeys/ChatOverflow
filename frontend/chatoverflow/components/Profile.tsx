@@ -20,7 +20,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
             const data = await response.json();
             const filteredProfileData = Object.fromEntries(
                 Object.entries(data.profile || {})
-                .filter(([key, value]) => value !== null && value !== undefined && value !== "" && key !== "id" && key !== "userid")
+                .filter(([key, value]) => value !== null && value !== undefined && value !== "" && key !== "userid")
               );
             data.profile = filteredProfileData;
             setProfile(data);
@@ -68,7 +68,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
                 </div>
 
 
-                {profile?.profile && Object.keys(profile?.profile).length > 0 && !Object.keys(profile?.profile).includes("avatar") ?
+                {profile?.profile && Object.keys(profile.profile).some(key => key !== 'avatar')?
                     <>
                         {profile?.profile.description ?
                             <p className="text-gray-900 mx-2 sm:py-1.5 sm:text-sm sm:leading-6"><strong>Description:</strong> {profile?.profile.description}</p>

@@ -21,14 +21,12 @@ const Home: React.FC = () => {
             email: user.email,
             password: user.password,
             redirect: false,
-            callbackUrl: '/user'
+            callbackUrl: "/user"
         });
-        
-        if (response !== undefined && response.ok) {
-            router.push('/user');
-        } else {
+
+        if (response === undefined || response.error) {
             setErrors(["Email or password are incorrect"]);
-        }
+        } 
     };
 
 

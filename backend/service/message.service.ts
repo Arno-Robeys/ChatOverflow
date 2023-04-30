@@ -29,7 +29,6 @@ const getMessageById = async (messageid: string): Promise<Message> => {
 
 const deleteMessageById = async ({id}: {id: string}): Promise<boolean> => {
     if(Number.isNaN(Number(id))) throw new Error('Id must be numeric');
-
     try {
         return await messageDB.deleteMessageById({id: parseInt(id)});
     } catch(err) {
