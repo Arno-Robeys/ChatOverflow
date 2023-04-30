@@ -9,7 +9,7 @@ const UserHome: React.FC<{ chatChanged?: boolean }> = ({ chatChanged }) => {
         async function fetchData() {
             const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${session?.user.id}/profile`);
             const data = await response.json();
-            sessionStorage.setItem('avatar', data.profile.avatar ?? 'default-avatar.png');
+            sessionStorage.setItem('avatar', data.profile.avatar ?? '/default-avatar.png');
         }
         fetchData();
     }, [session?.user.id]);

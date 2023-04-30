@@ -1,12 +1,15 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import React from 'react'
 import SideBar from './Sidebar'
+import moment from 'moment';
+import { pusher } from '@/pusher'
+import { notification } from '@/types/notification.type'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -15,6 +18,9 @@ function classNames(...classes: string[]) {
 const Navbar: React.FC = () => {
 
   const router = useRouter();
+  const {data: session} = useSession();
+  const [notifications, setNotifications] = useState<notification[]>([]);
+  
   const logout = async () => {
     await signOut({
       redirect: false,
@@ -28,6 +34,30 @@ const Navbar: React.FC = () => {
 
   function closeModal() {
     setIsOpen(false)
+  }
+
+  useEffect(() => {
+    if(session) {
+      refreshNotifications();
+      const channel = pusher.subscribe(`notification-${session?.user.id}`);
+      channel.bind('notification', (data: any) => {
+        refreshNotifications();
+      });
+    }
+  }, [session]);
+  
+
+  const refreshNotifications = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/user/${session?.user.id}`);
+    const data = await response.json();
+    setNotifications(data);
+  }
+
+  const markAsRead = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/read/${session?.user.id}`, {method: "PUT"});
+    if(response.ok) {
+      toast.success('Marked all as read');
+    }
   }
 
   return (
@@ -72,6 +102,7 @@ const Navbar: React.FC = () => {
                     <Menu.Button className="p-1 rounded-full text-gray-400 hover:text-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-200">
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
+                      {notifications.length > 0 && <div className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"/>}
                     </Menu.Button>
                   </div>
                   <Transition
@@ -83,21 +114,33 @@ const Navbar: React.FC = () => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-1 z-10 mt-2 w-72 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute right-1 z-10 mt-2 w-72 origin-top-right rounded-md bg-white py-1 shadow-lg max-h-96 overflow-y-auto">
+                    {notifications.length > 0 ? (
+                      <>
+                        {notifications.map((notification, index) => (
+                          <Menu.Item key={index}>
+                            <div className="flex items-center px-4 py-3 border-b hover:bg-gray-100">
+                              <p className="text-gray-600 text-sm mx-2">
+                                <span className="font-bold">{notification?.message?.user?.firstname}</span> sent you a message · {moment(notification?.message?.time).format('HH:mm DD/MM/YYYY')}
+                              </p>
+                            </div>
+                          </Menu.Item>
+                        ))}
+                        <Menu.Item>
+                          <div className="flex items-center justify-center p-1 hover:bg-gray-100">
+                            <button onClick={() => markAsRead()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-8 rounded">
+                              Mark as read
+                            </button>
+                          </div>
+                        </Menu.Item>
+                      </>
+                    ) : (
                       <Menu.Item>
-                        <a href="#" className="flex items-center px-4 py-3 border-b hover:bg-gray-100">
-                          <p className="text-gray-600 text-sm mx-2">
-                            <span className="font-bold">Arno</span> sended you a message · 2m
-                          </p>
+                        <a href="#" className="flex items-center justify-center hover:bg-gray-100">
+                          <p className="text-gray-600 text-md mx-2">No notifications</p>
                         </a>
                       </Menu.Item>
-                      <Menu.Item>
-                        <a href="#" className="flex items-center px-4 py-3 border-b hover:bg-gray-100">
-                          <p className="text-gray-600 text-sm mx-2">
-                            <span className="font-bold">Gerald</span> sended you a message · 45m
-                          </p>
-                        </a>
-                      </Menu.Item>
+                    )}
                     </Menu.Items>
                   </Transition>
                 </Menu>
@@ -107,7 +150,7 @@ const Navbar: React.FC = () => {
                   <div>
                     <Menu.Button className="flex rounded-full text-sm">
                       <span className="sr-only">Open user menu</span>
-                      <img className="h-8 w-8 rounded-full" src={sessionStorage.getItem('avatar') ?? undefined} alt="Avatar"/>
+                      <img className="h-8 w-8 rounded-full" src={sessionStorage.getItem('avatar') ?? "/default-avatar.png"} alt="Avatar"/>
                     </Menu.Button>
                   </div>
                   <Transition

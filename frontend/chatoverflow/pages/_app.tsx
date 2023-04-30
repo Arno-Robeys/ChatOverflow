@@ -2,10 +2,10 @@ import Navbar from '@/components/Navbar'
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
-import { SessionProvider } from 'next-auth/react';
+import { SessionProvider, useSession } from 'next-auth/react';
 import AuthWrapper from '@/components/AuthWrapper';
 import { Toaster } from 'react-hot-toast';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const publicPages = ["/auth", "/"];
 export default function App({ Component, pageProps }: AppProps) {

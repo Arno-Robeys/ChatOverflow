@@ -31,6 +31,7 @@
 import express from "express";
 import { Notification } from "../domain/model/notification";
 import notificationService from "../service/notification.service";
+import { pusherServer } from "../pusher";
 const router = express.Router();
 
 
@@ -62,8 +63,8 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
     try {
-        const messages = await notificationService.getAllNotifications();
-        res.status(200).json(messages)
+        const notification = await notificationService.getAllNotifications();
+        res.status(200).json(notification)
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})
     }
@@ -95,8 +96,8 @@ router.get("/", async (req, res) => {
  */
 router.get("/user/:id", async (req, res) => {
     try {
-        const deletedNotification = await notificationService.getAllNotificationsByUserId(req.params.id);
-        res.status(200).json(deletedNotification)
+        const notifications = await notificationService.getAllNotificationsByUserId(req.params.id);
+        res.status(200).json(notifications)
         } catch(error) {
             res.status(500).json({status: 'error', errorMessage: error.message})
         }
@@ -141,6 +142,7 @@ router.post("/createnotification", async (req, res) => {
     try{
         const notification = new Notification(req.body);
         const newNotification = await notificationService.createNotification(notification);
+        pusherServer.trigger(`notification-${req.body.userid}`, 'notification', "new notification");
         res.status(200).json(newNotification);
     } catch(error) {
         res.status(500).json({status: 'error', errorMessage: error.message})
@@ -149,18 +151,13 @@ router.post("/createnotification", async (req, res) => {
 
 /**
  * @swagger
- * /notification/update/{id}:
+ * /notification/read/{userid}:
  *   put:
- *     summary: Update notification
+ *     summary: Update notification as read
  *     tags: 
  *       - Notifications
  *     parameters:
  *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *       - in: query
  *         name: userid
  *         required: true
  *         schema:
@@ -178,10 +175,10 @@ router.post("/createnotification", async (req, res) => {
  *         description: Internal server error
  */ 
 
-//Update notification is niet nodig, maar voor de volledigheid toch toegevoegd (CRUD Operations)
-router.put("/update/:id", async (req, res) => {
+router.put("/read/:userid", async (req, res) => {
     try {
-        const updatedNotification = await notificationService.updateNotificationById(req.params.id, String(req.query.userid));
+        const updatedNotification = await notificationService.updateNotificationByUserId(req.params.userid);
+        pusherServer.trigger(`notification-${req.params.userid}`, 'notification', "notification read");
         res.status(200).json(updatedNotification)
         } catch(error) {
             res.status(500).json({status: 'error', errorMessage: error.message})

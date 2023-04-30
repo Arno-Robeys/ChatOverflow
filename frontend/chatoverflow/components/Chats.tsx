@@ -80,8 +80,8 @@ const Chats: React.FC<{method?: () => void }> = ({method}) => {
                                     <h4 className="text-sm font-semibold text-gray-900">{user?.nickname ? user.nickname : user?.firstname + " " + user?.lastname}</h4>
                                     {chat.lastMessage ? (
                                     <div className="text-[13px]">
-                                      {chat.lastMessage?.message.length > 50
-                                        ? chat.lastMessage?.message.substring(0, 35) + "..."
+                                      {chat.lastMessage?.message.length > 20
+                                        ? chat.lastMessage?.message.substring(0, 20) + "..."
                                         : chat.lastMessage?.message} · {converter(chat.lastMessage?.time)}
                                     </div>
                                     ) : null}
