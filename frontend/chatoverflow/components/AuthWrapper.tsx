@@ -5,7 +5,7 @@ import { PropsWithChildren } from "react";
 const AuthWrapper = ({ children }: PropsWithChildren) => {
   const { data: session, status } = useSession();
 
-  if(status === "loading" || status === "unauthenticated") return <div>Loading...</div>
+  if(status === "loading") return <div>Loading...</div>
 
   if (!session) {
     const router = useRouter();

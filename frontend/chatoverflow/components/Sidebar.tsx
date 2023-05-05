@@ -2,10 +2,12 @@ import React from 'react'
 import { useState } from 'react';
 import Chats from './Chats';
 import Link from 'next/link';
-import { UserCircleIcon } from '@heroicons/react/24/solid';
+import { useSession } from 'next-auth/react';
 
 
 const SideBar: React.FC<{method?: () => void}> = ({method}) => {
+
+  const {data: session} = useSession();
 
   interface User {
     userid: number;
@@ -28,7 +30,7 @@ const SideBar: React.FC<{method?: () => void}> = ({method}) => {
       setSearchResults([]);
     } else {
       setIsSearching(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/find/${event.target.value}`, {method: 'GET'});
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/find/${event.target.value}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
       if(response.ok){
         const users = await response.json();
         setSearchResults(users.allUsers);
