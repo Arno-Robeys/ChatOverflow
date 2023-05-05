@@ -11,12 +11,6 @@ const Register: React.FC = () => {
 
     const handleSubmit : FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
-        
-        if (!await emailAvailable(user.email)) {
-            setUser({...user, email: ''});
-            setErrors([...errors, 'Email is already in use.']);
-            return;
-        }
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/registreer`, {
             method: 'POST',
@@ -40,12 +34,6 @@ const Register: React.FC = () => {
             setErrors([data.errorMessage] || ['Something went wrong.']);
         }
     };
-
-    const emailAvailable = async (email: string): Promise<Boolean> => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user`);
-        const data = await response.json();
-        return data.every((user: any) => user.email !== email);
-    }
 
     return (
 <section className="bg-gradient-to-r from-gray-50 to-gray-200">
