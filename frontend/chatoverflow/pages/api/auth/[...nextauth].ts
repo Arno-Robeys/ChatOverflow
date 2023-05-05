@@ -17,14 +17,17 @@ export const authOptions: NextAuthOptions = {
                 body: JSON.stringify({email, password})
             });
             const respjson = await response.json();
+            console.log(respjson);
 
-            return !respjson ? null : {id: respjson.user.userid.toString(), name: respjson.user.firstname +' '+ respjson.user.lastname, email: respjson.user.email};
+            return !respjson ? null : {id: respjson.user.userid.toString(), name: respjson.user.firstname +' '+ respjson.user.lastname, email: respjson.user.email, token: respjson.token};
         },
         }),
     ],
 
     callbacks: {
         session: async ({token, session}) => {
+            console.log(token);
+            console.log(session);
             session.user.id = token.sub ?? token.id;
             return Promise.resolve(session);
         },

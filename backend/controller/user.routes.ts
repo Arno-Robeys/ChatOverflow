@@ -42,7 +42,6 @@
  *
  */
 import express from "express";
-import { User } from "../domain/model/user";
 import userService from "../service/user.service";
 const router = express.Router();
 
@@ -237,7 +236,7 @@ router.get("/find/:name", async (req, res) => {
 router.post("/registreer", async (req, res) => {
     const { firstname, lastname, email, password } = req.body;
     try {
-        const user = await userService.createUser(new User({firstname, lastname, email, password}))
+        const user = await userService.createUser(firstname, lastname, email, password)
         res.status(200).json({status: "success", user})
     } catch(error) {
         res.status(400).json({status: 'error', errorMessage: error.message})
@@ -280,9 +279,10 @@ router.post("/registreer", async (req, res) => {
 router.post("/login", async (req, res) => {
     const email = req.body.email
     const password = req.body.password
+    //throw new Error("test")
     try {
         const user = await userService.loginUser(email, password)
-        res.status(200).json({status: "success", user})
+        res.status(200).json({status: "Authentication Succesful", user})
     } catch(error) {
         res.status(403).json({status: 'error', errorMessage: error.message})
     }

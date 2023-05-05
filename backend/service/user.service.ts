@@ -1,17 +1,21 @@
 import { User } from '../domain/model/user';
 import userDB from '../domain/data-access/user.db';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { UserLogin } from '../types/userLogin.type';
 
 const getAllUsers = async (): Promise<User[]> => {
     return userDB.getAllUsers();
 };
 
-const createUser = async (user: User): Promise<User> => {
-    if(!user.firstname.trim() || !user.lastname.trim() || !user.password.trim()) throw new Error("All fields must be provided")
+const createUser = async (firstname: string, lastname: string, email: string, password: string): Promise<User> => {
+    if(!firstname.trim() || !lastname.trim() || !password.trim()) throw new Error("All fields must be provided")
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if(!emailRegex.test(user.email)) throw new Error("Email must be valid")
-    return await userDB.createUser(user);
+    const pass = await bcrypt.hash(password, 12);
+    if(!emailRegex.test(email)) throw new Error("Email must be valid")
+    return await userDB.createUser(new User({firstname: firstname, lastname: lastname, email: email, password: pass}));
   };
 
 const getAllUsersByName = async (name: string): Promise<User[]> => {
@@ -29,12 +33,13 @@ const getUserById = async (userid: string): Promise<User> => {
     return user;
 };
 
-const loginUser = async (email: string, password: string): Promise<User> => {
+const loginUser = async (email: string, password: string): Promise<UserLogin> => {
     if(!email) throw new Error('Email must be provided');
     if(!password) throw new Error('Password must be provided');
     const user = await userDB.getUserByEmail({email: email});
-    if(user.password != password) throw new Error("Password incorrect")
-    return user;
+
+    if(!bcrypt.compare(password, user.password)) throw new Error("Password incorrect")
+    return { userid: user.userid, firstname: user.firstname, lastname: user.lastname, email: user.email , token: generateJwtToken(email)};
 };
 
 const deleteUserById = async ({id}: {id: string}): Promise<boolean> => {
@@ -59,6 +64,15 @@ const updateUser = async ({ id }: { id: string },{ data }: { data: Partial<User>
 const getUserAndProfileById = async (id: string): Promise<User> => {
     if(Number.isNaN(Number(id))) throw new Error('Id must be numeric');
     return userDB.getUserAndProfileById({id: parseInt(id)});
+}
+
+const generateJwtToken = (email: string) => {
+    try {
+        const token = jwt.sign({email: email}, process.env.JWT_SECRET, {expiresIn: `${process.env.JWT_EXPIRES_HOUR}h`, issuer: "whatt"});
+        return token;
+    } catch(err) {
+        throw new Error('Token could not be generated');
+    }
 }
 
 
