@@ -16,7 +16,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
 
     useEffect(() => {
         (async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${profileUserId}/profile`, { method: 'GET' });
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${profileUserId}/profile`, { method: 'GET', headers: { 'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}` } });
             const data = await response.json();
             const filteredProfileData = Object.fromEntries(
                 Object.entries(data.profile || {})
@@ -33,7 +33,7 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/create`, {
             method: 'POST',
             body: JSON.stringify({ user1: loggedInUserId, user2: profileUserId }),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}` },
         });
 
         if (response.ok) {

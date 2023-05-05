@@ -22,9 +22,10 @@ const userSettings: React.FC = () => {
 
   useEffect(() => {
   (async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${loggedInUserId}/profile`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${loggedInUserId}/profile`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
     var data = await response.json();
     setUser(data);
+    setSelectedAvatar(data?.profile?.avatar);
     setTags(data?.profile?.tags?.split(", ").map((tag: string) => {
           if (!tag.trim()) return null;
           return { id: tag, text: tag };
@@ -52,8 +53,7 @@ const userSettings: React.FC = () => {
         },
         userid: loggedInUserId
       }),
-      headers: { 'Content-Type': 'application/json' }
-    });
+      headers: { 'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}` }});
 
     if(response.ok) {     
       sessionStorage.setItem('avatar', selectedAvatar as string);

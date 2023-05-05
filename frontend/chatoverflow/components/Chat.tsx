@@ -19,7 +19,8 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/send`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'authorization': `bearer ${session?.user.accessToken}`
         },
         body: JSON.stringify({
           message: input,
@@ -33,7 +34,8 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
       const notification = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/createnotification`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'authorization': `bearer ${session?.user.accessToken}`
         },
         body: JSON.stringify({
           messageid: data.messageid,
@@ -48,7 +50,8 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/delete/${messageid}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'authorization': `bearer ${session?.user.accessToken}`
         },
         body: JSON.stringify({
           chatid: chatId
@@ -60,7 +63,8 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/update`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'authorization': `bearer ${session?.user.accessToken}`
         },
         body: JSON.stringify({
           messageid: messageEdit.messageid,
@@ -88,13 +92,13 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
         setUpdateChat((updateChat) => !updateChat);
       });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/${chatId}`, { method: 'GET' });
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/${chatId}`, { method: 'GET', headers: { 'authorization': `bearer ${session?.user.accessToken}` } });
       await response.json().then((data) => {
         const user = data.users.find((user: { userid: number; }) => user.userid !== parseInt(session?.user.id));
         setOtherUser(user);
       });
 
-      const response2 = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/chat/${chatId}`, { method: 'GET' });
+      const response2 = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/chat/${chatId}`, { method: 'GET', headers: { 'authorization': `bearer ${session?.user.accessToken}` } });
       const data2 = await response2.json();
       setMessages(data2);
     })();
@@ -140,18 +144,12 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
               message.userid === parseInt(session?.user.id) ?
 
               <div key={message.messageid} className="chat-message">
-                <Menu as="div" className="relative ml-3">
+                <Menu as="div" className="ml-3">
                 <div className="flex items-center justify-end">
                   <Menu.Button className="text-gray-400 hover:text-black p-2">
+                    <div className='relative'>
                     <a className='text-xl'>&#8942;</a>
-                  </Menu.Button>
-                  <div className="flex flex-col space-y-2 max-w-md mr-2 order-1 items-end">
-                    <div className='px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white '>
-                      <span>{message.message}</span>
-                    </div>
-                  </div>
-                </div>
-                  <Transition
+                    <Transition
                     as={Fragment}
                     enter="transition ease-out duration-100"
                     enterFrom="transform opacity-0 scale-95"
@@ -160,7 +158,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-20 bottom-11 z-10 w-24 rounded-md bg-white shadow-lg">
+                    <Menu.Items className="absolute right-2 bottom-6 z-10 w-24 rounded-md bg-white shadow-lg">
                       <Menu.Item>
                         <a onClick={() => handleEditMode(message.messageid, message.message)} className="flex items-center p-2 border-b hover:bg-gray-100">
                           <p className="text-gray-600 text-sm mx-2">
@@ -177,6 +175,14 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
+                  </div>
+                  </Menu.Button>
+                  <div className="flex flex-col space-y-2 max-w-md mr-2 order-1 items-end">
+                    <div className='px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white '>
+                      <span>{message.message}</span>
+                    </div>
+                  </div>
+                </div>
                 </Menu>
             </div> :
               <div key={message.messageid} className="chat-message">

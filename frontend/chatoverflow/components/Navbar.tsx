@@ -48,13 +48,13 @@ const Navbar: React.FC = () => {
   
 
   const refreshNotifications = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/user/${session?.user.id}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/user/${session?.user.id}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
     const data = await response.json();
     setNotifications(data);
   }
 
   const markAsRead = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/read/${session?.user.id}`, {method: "PUT"});
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/read/${session?.user.id}`, {method: "PUT", headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
     if(response.ok) {
       toast.success('Marked all as read');
     }

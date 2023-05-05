@@ -11,8 +11,9 @@ const Chats: React.FC<{method?: () => void }> = ({method}) => {
     if(!session) return (<div>Not logged in</div>);
     const [chats, setChats] = useState<UserChat[]>([]);
 
+
     const fetchData = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/user/${session?.user.id}`, {method: 'GET'});
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/user/${session?.user.id}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
       const data = await response.json();
       setChats(data);
     }
