@@ -45,6 +45,16 @@ const Navbar: React.FC = () => {
       });
     }
   }, [session]);
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const body = document.querySelector('div');
+    if (darkMode) {
+        body.classList.add('dark');
+    } else {
+        body.classList.remove('dark');
+    }
+}, [darkMode]);
   
 
   const refreshNotifications = async () => {
@@ -61,14 +71,14 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <Disclosure as="nav" className="border-b-4">
+    <Disclosure as="nav" className="border-b-4 dark:bg-gray-800  dark:text-gray-300 dark:border-blue-900">
       {({ open }) => (
         <>
           <div className="px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button onClick={() => setIsOpen(isOpen => !isOpen)} className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <Disclosure.Button onClick={() => setIsOpen(isOpen => !isOpen)} className="inline-flex dark:items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {isOpen ? (
                     <><XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -96,6 +106,8 @@ const Navbar: React.FC = () => {
                       src="/logo.png"
                       alt="Logo"/><span className='pl-1 md:pl-2'>ChatOverflow</span></a>
               </div>
+              <button onClick={() => setDarkMode(!darkMode)}>Toggle Dark Mode</button>
+
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <Menu as="div" className="relative ml-3">
                   <div>

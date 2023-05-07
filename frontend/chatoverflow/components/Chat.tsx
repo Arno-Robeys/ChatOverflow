@@ -116,21 +116,21 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
   }, [messages]);
 
   return (
-        <div className="flex-1 p:2 pb-20 justify-between flex flex-col h-screen">
+        <div className="flex-1 p:2 pb-20 justify-between flex flex-col h-screen dark:bg-gray-800  dark:text-gray-300  ">
           <div className="flex sm:items-center justify-between p-3 border-b-2 border-gray-200">
               <div className="relative flex items-center space-x-4">
                 <img src={otherUser?.profile?.avatar ? otherUser.profile.avatar : "/default-avatar.png"} alt="" className="w-10 sm:w-12 h-10 sm:h-12 rounded-full"/>
                 <div className="flex flex-col leading-tight">
                     <div className="text-2xl mt-1 flex items-center">
-                      <span className="text-gray-700 mr-3">
+                      <span className="text-gray-700  dark:text-gray-300 mr-3">
                         {otherUser && (otherUser.nickname ? otherUser.nickname : `${otherUser.firstname} ${otherUser.lastname}`)}
                       </span>
                     </div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <Link href={`/user/profile?id=${otherUser?.userid}`} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-20 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none">Profile</Link>
-                <Link href={"/user"} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none">
+                <Link href={`/user/profile?id=${otherUser?.userid}`} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-20 transition duration-500 ease-in-out text-gray-500  dark:text-gray-300 hover:bg-gray-300 focus:outline-none">Profile</Link>
+                <Link href={"/user"} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500  dark:text-gray-300 hover:bg-gray-300 focus:outline-none">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                   </svg>

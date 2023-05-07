@@ -77,8 +77,18 @@ const userSettings: React.FC = () => {
     setUser({...user as UserProfile, profile: {...user?.profile as any, avatar: selectedAvatar}});
   }, [selectedAvatar]);
 
+  const [darkMode, setDarkMode] = useState(false);
+    useEffect(() => {
+        const body = document.querySelector('div');
+        if (darkMode) {
+            body.classList.add('dark');
+        } else {
+            body.classList.remove('dark');
+        }
+    }, [darkMode]);
+
   return (
-    <div className="flex justify-center py-4">
+    <div className="flex justify-center py-4  dark:bg-gray-800  dark:text-gray-300">
     <form className="w-11/12 sm:w-8/12" onSubmit={handleSubmit}>
         <div>
           <h2 className="text-base font-semibold leading-7 text-gray-900">Profile Information</h2>

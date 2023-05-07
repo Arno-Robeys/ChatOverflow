@@ -23,10 +23,6 @@ const Home: React.FC = () => {
             callbackUrl: "/user"
         });
 
-        const cookie = new Cookie();
-        cookie.set('email', user.email, {path: '/'});
-
-
         if (response === undefined || response.error) {
             setErrors(["Email or password are incorrect"]);
         } 

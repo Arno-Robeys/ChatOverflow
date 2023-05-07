@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import SideBar from "@/components/Sidebar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const UserHome: React.FC = () => {
     const { data: session } = useSession();
@@ -14,13 +14,26 @@ const UserHome: React.FC = () => {
         fetchData();
     }, [session?.user.id]);
 
+    const [darkMode, setDarkMode] = useState(false);
+    useEffect(() => {
+        const body = document.querySelector('div');
+        if (darkMode) {
+            body.classList.add('dark');
+        } else {
+            body.classList.remove('dark');
+        }
+    }, [darkMode]);
+    
+    // ...
+    
+
 
     return (
         // main container
-        <div className='overflow-hidden'>
+        <div className='overflow-hidden dark:bg-gray-800  dark:text-gray-300 dark:border-blue-900'>
             {/* 2 components */}
             <div className="flex flex-wrap bg-[#ffffff] h-screen">
-                <div className="border min-w-[300px] max-w-[500] bg-gray-50 hidden sm:block">
+                <div className="border min-w-[300px] max-w-[500] bg-gray-50  dark:text-gray-300 hidden sm:block">
                     <SideBar />
                 </div>
 

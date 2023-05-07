@@ -58,43 +58,45 @@ const Chats: React.FC<{method?: () => void }> = ({method}) => {
       
 
   return (
-    <section className="flex flex-col antialiased bg-gray-50 text-gray-600 h-full">
+    <section className="flex flex-col antialiased bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 h-full">
     <div>
-            <div className="py-3 px-5">
-                <h3 className="text-xs font-semibold uppercase text-gray-400 mb-1">Chats</h3>
 
-                {chats.length === 0 ? 
-                    <div className="flex flex-col justify-center items-center h-40">
-                        <p className="text-lg text-gray-400">Go chat with some people!</p>
-                        <a href="https://youtu.be/6EEW-9NDM5k?t=12" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Lonelyyyy</a>
-                    </div>
-                 : 
-                    <div className="divide-y divide-gray-200">
-                    {chats.map((chat) =>  {
-                        var user = chat.users.find(user => user.userid !== parseInt(session?.user.id));
-                        return (
-                        <div onClick={method} key={chat.chatid} className="w-full text-left hover:bg-gray-100">
-                            <Link href={`/chat/${chat.chatid}`}>
-                                <div className="flex items-center py-2">
-                                    <img className="rounded-full items-start flex-shrink-0 mr-3" width="32" height="32" src={user?.profile?.avatar ? user.profile.avatar : "/default-avatar.png"} />
-                                    <div>
-                                    <h4 className="text-sm font-semibold text-gray-900">{user?.nickname ? user.nickname : user?.firstname + " " + user?.lastname}</h4>
-                                    {chat.lastMessage ? (
-                                    <div className="text-[13px]">
-                                      {chat.lastMessage?.message.length > 20
-                                        ? chat.lastMessage?.message.substring(0, 20) + "..."
-                                        : chat.lastMessage?.message} · {converter(chat.lastMessage?.time)}
-                                    </div>
-                                    ) : null}
-                                    </div>
+        <div className="py-3 px-5">
+            <h3 className="text-xs font-semibold uppercase text-gray-400 mb-1">Chats</h3>
+
+            {chats.length === 0 ? 
+                <div className="flex flex-col justify-center items-center h-40">
+                    <p className="text-lg text-gray-400 dark:text-gray-300">Go chat with some people!</p>
+                    <a href="https://youtu.be/6EEW-9NDM5k?t=12" className="font-medium text-blue-600 dark:text-blue-400 hover:underline">Lonelyyyy</a>
+                </div>
+             : 
+                <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                {chats.map((chat) =>  {
+                    var user = chat.users.find(user => user.userid !== parseInt(session?.user.id));
+                    return (
+                    <div onClick={method} key={chat.chatid} className="w-full text-left hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <Link href={`/chat/${chat.chatid}`}>
+                            <div className="flex items-center py-2">
+                                <img className="rounded-full items-start flex-shrink-0 mr-3 border border-gray dark:border-gray-700" width="32" height="32" src={user?.profile?.avatar ? user.profile.avatar : "/default-avatar.png"} />
+                                <div>
+                                <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">{user?.nickname ? user.nickname : user?.firstname + " " + user?.lastname}</h4>
+                                {chat.lastMessage ? (
+                                <div className="text-[13px]">
+                                  {chat.lastMessage?.message.length > 20
+                                    ? chat.lastMessage?.message.substring(0, 20) + "..."
+                                    : chat.lastMessage?.message} · {converter(chat.lastMessage?.time)}
                                 </div>
-                            </Link>
-                        </div>
-                        )})}
-                    </div>}
-            </div>
+                                ) : null}
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+                    )})}
+                </div>}
+        </div>
     </div>
 </section>
+
   )
 }
 export default Chats
