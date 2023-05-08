@@ -1,4 +1,4 @@
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link'
 import{ useState,useEffect } from 'react'
 import { UserChat } from "@/types/userchat.type";
@@ -21,9 +21,13 @@ const Chats: React.FC<{method?: () => void }> = ({method}) => {
           const data = await response.json();
           setChats(data);
       } else if(response.status === 401) {
-        router.push("/401");
-        toast.error("You are not authorized to view this page", {duration: 10000});
-      }
+          await signOut({
+            redirect: false,
+          });
+          sessionStorage.removeItem('avatar');
+          router.push('/');
+          toast.error('You sended a request with an invalid token. Please login again.');
+        }
     }
 
     useEffect(() => {

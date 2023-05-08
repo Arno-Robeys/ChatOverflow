@@ -10,6 +10,7 @@ import SideBar from './Sidebar'
 import moment from 'moment';
 import { pusher } from '@/pusher'
 import { notification } from '@/types/notification.type'
+import { log } from 'console'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -52,6 +53,8 @@ const Navbar: React.FC = () => {
     if(response.ok) {
       const data = await response.json();
       setNotifications(data);
+    } else if(response.status === 401) {
+      logout();
     }
   }
 

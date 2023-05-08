@@ -1,8 +1,9 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 import { useEffect, useState } from "react";
 import { UserProfile } from "@/types/userprofile.type";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
 
@@ -41,7 +42,14 @@ const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
         if (response.ok) {
             const data = await response.json();
             router.push(`/chat/${data.chatid}`);
-        }
+        } else if(response.status === 401) {
+            await signOut({
+              redirect: false,
+            });
+            sessionStorage.removeItem('avatar');
+            router.push('/');
+            toast.error('You sended a request with an invalid token. Please login again.');
+          }
 
     };
 
