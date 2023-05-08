@@ -4,18 +4,26 @@ import{ useState,useEffect } from 'react'
 import { UserChat } from "@/types/userchat.type";
 import moment from 'moment';
 import { pusher } from "../pusher"
+import { useRouter } from 'next/router';
+import { toast } from 'react-hot-toast';
 
 const Chats: React.FC<{method?: () => void }> = ({method}) => {
 
     const { data: session } = useSession();
     if(!session) return (<div>Not logged in</div>);
     const [chats, setChats] = useState<UserChat[]>([]);
+    const router = useRouter();
 
 
     const fetchData = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/user/${session?.user.id}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
-      const data = await response.json();
-      setChats(data);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/user/${session?.user.id}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user}`}});
+      if(response.ok) {
+          const data = await response.json();
+          setChats(data);
+      } else if(response.status === 401) {
+        router.push("/401");
+        toast.error("You are not authorized to view this page", {duration: 10000});
+      }
     }
 
     useEffect(() => {

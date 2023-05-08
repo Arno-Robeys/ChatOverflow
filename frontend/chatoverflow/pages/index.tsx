@@ -2,7 +2,6 @@
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FormEventHandler, useState } from 'react';
-import Cookie from 'universal-cookie';
 
 
 const Home: React.FC = () => {
@@ -23,9 +22,6 @@ const Home: React.FC = () => {
             redirect: false,
             callbackUrl: "/user"
         });
-
-        const cookie = new Cookie();
-        cookie.set('email', user.email, {path: '/'});
 
 
         if (response === undefined || response.error) {

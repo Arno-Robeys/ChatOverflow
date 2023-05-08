@@ -28,7 +28,8 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
           userid: parseInt(session?.user.id)
         })
       });
-
+      
+      if(response.ok) {
       const data = await response.json();
 
       const notification = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/createnotification`, {
@@ -44,6 +45,8 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
         })
       });
       setInput('');
+
+      }
     }
 
     const deleteMessage = async (messageid: number) => {
@@ -93,14 +96,16 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
       });
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/${chatId}`, { method: 'GET', headers: { 'authorization': `bearer ${session?.user.accessToken}` } });
-      await response.json().then((data) => {
-        const user = data.users.find((user: { userid: number; }) => user.userid !== parseInt(session?.user.id));
-        setOtherUser(user);
-      });
+      if(response.ok) {
+        const data = await response.json()
+        setOtherUser(data.users.find((user: { userid: number; }) => user.userid !== parseInt(session?.user.id)));
+      }
 
       const response2 = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/chat/${chatId}`, { method: 'GET', headers: { 'authorization': `bearer ${session?.user.accessToken}` } });
-      const data2 = await response2.json();
-      setMessages(data2);
+      if(response2.ok) {
+        const data2 = await response2.json();
+        setMessages(data2);
+      }
     })();
     return () => {
       pusher.unsubscribe(`chat${chatId}`);
