@@ -23,13 +23,15 @@ const userSettings: React.FC = () => {
   useEffect(() => {
   (async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${loggedInUserId}/profile`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
-    var data = await response.json();
-    setUser(data);
-    setSelectedAvatar(data?.profile?.avatar);
-    setTags(data?.profile?.tags?.split(", ").map((tag: string) => {
-          if (!tag.trim()) return null;
-          return { id: tag, text: tag };
-        }).filter((tag: string) => tag !== null));
+    if(response.ok) {
+      var data = await response.json();
+      setUser(data);
+      setSelectedAvatar(data?.profile?.avatar);
+      setTags(data?.profile?.tags?.split(", ").map((tag: string) => {
+            if (!tag.trim()) return null;
+            return { id: tag, text: tag };
+          }).filter((tag: string) => tag !== null));
+    }
   })()},[]);
 
   const handleSubmit : FormEventHandler<HTMLFormElement> = async (e) => {

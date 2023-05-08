@@ -1,6 +1,8 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import SideBar from "@/components/Sidebar";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 const UserHome: React.FC = () => {
     const { data: session } = useSession();
@@ -8,8 +10,18 @@ const UserHome: React.FC = () => {
     useEffect(() => {
         async function fetchData() {
             const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${session?.user.id}/profile`, { method: 'GET', headers: { 'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}` } });
-            const data = await response.json();
-            sessionStorage.setItem('avatar', data.profile.avatar ?? '/default-avatar.png');
+            if(response.ok) {
+                const data = await response.json();
+                sessionStorage.setItem('avatar', data.profile.avatar ?? '/default-avatar.png');
+            } else if(response.status === 401) {
+                await signOut({
+                    redirect: false,
+                });
+                sessionStorage.removeItem('avatar');
+                const router = useRouter();
+                router.push('/');
+                toast.error('You sended a request with an invalid token. Please login again.');
+            }
         }
         fetchData();
     }, [session?.user.id]);

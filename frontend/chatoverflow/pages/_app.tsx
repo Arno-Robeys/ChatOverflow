@@ -5,9 +5,9 @@ import { useRouter } from 'next/router'
 import { SessionProvider, useSession } from 'next-auth/react';
 import AuthWrapper from '@/components/AuthWrapper';
 import { Toaster } from 'react-hot-toast';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-const publicPages = ["/auth", "/"];
+const publicPages = ["/auth", "/", "/401"];
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const isPublicPage = publicPages.includes(router.pathname);

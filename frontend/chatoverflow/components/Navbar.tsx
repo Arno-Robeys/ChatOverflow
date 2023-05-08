@@ -11,6 +11,7 @@ import SideBar from './Sidebar'
 import moment from 'moment';
 import { pusher } from '@/pusher'
 import { notification } from '@/types/notification.type'
+import { log } from 'console'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -70,14 +71,20 @@ const Navbar: React.FC = () => {
 
   const refreshNotifications = async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/user/${session?.user.id}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
-    const data = await response.json();
-    setNotifications(data);
+    if(response.ok) {
+      const data = await response.json();
+      setNotifications(data);
+    } else if(response.status === 401) {
+      logout();
+    }
   }
 
   const markAsRead = async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/read/${session?.user.id}`, {method: "PUT", headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
     if(response.ok) {
       toast.success('Marked all as read');
+    } else {
+      toast.error('Something went wrong');
     }
   }
 
