@@ -16,7 +16,7 @@ const Chats: React.FC<{method?: () => void }> = ({method}) => {
 
 
     const fetchData = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/user/${session?.user.id}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user}`}});
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/user/${session?.user.id}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
       if(response.ok) {
           const data = await response.json();
           setChats(data);
