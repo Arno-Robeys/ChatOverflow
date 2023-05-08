@@ -144,20 +144,20 @@ const Navbar: React.FC = () => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-1 z-10 mt-2 w-72 origin-top-right rounded-md bg-white py-1 shadow-lg max-h-96 overflow-y-auto">
+                    <Menu.Items className="absolute right-1 z-10 mt-2 w-72 origin-top-right rounded-md bg-white dark:bg-gray-700  dark:text-gray-400 py-1 shadow-lg max-h-96 overflow-y-auto">
                     {notifications.length > 0 ? (
                       <>
                         {notifications.map((notification, index) => (
                           <Menu.Item key={index}>
-                            <div className="flex items-center px-4 py-3 border-b hover:bg-gray-100">
-                              <p className="text-gray-600 text-sm mx-2">
+                            <div className="flex items-center px-4 py-3 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-800  dark:text-gray-400">
+                              <p className="text-gray-600 dark:bg-gray-800  dark:text-gray-300 text-sm mx-2">
                                 <span className="font-bold">{notification?.message?.user?.firstname}</span> sent you a message · {moment(notification?.message?.time).format('HH:mm DD/MM/YYYY')}
                               </p>
                             </div>
                           </Menu.Item>
                         ))}
                         <Menu.Item>
-                          <div className="flex items-center justify-center p-1 hover:bg-gray-100">
+                          <div className="flex items-center justify-center p-1 hover:bg-gray-100 dark:hover:bg-gray-700">
                             <button onClick={() => markAsRead()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-8 rounded">
                               Mark as read
                             </button>
@@ -166,8 +166,8 @@ const Navbar: React.FC = () => {
                       </>
                     ) : (
                       <Menu.Item>
-                        <a href="#" className="flex items-center justify-center hover:bg-gray-100">
-                          <p className="text-gray-600 text-md mx-2">No notifications</p>
+                        <a href="#" className="flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <p className="text-gray-600 dark:text-gray-300  text-md mx-2">No notifications</p>
                         </a>
                       </Menu.Item>
                     )}
