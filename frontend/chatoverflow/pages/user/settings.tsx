@@ -91,8 +91,8 @@ const userSettings: React.FC = () => {
     <div className="flex justify-center py-4  dark:bg-gray-800  dark:text-gray-300">
     <form className="w-11/12 sm:w-8/12" onSubmit={handleSubmit}>
         <div>
-          <h2 className="text-base font-semibold leading-7 text-gray-900">Profile Information</h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
+          <h2 className="text-base font-semibold leading-7 text-gray-900  dark:bg-gray-800  dark:text-gray-300">Profile Information</h2>
+          <p className="mt-1 text-sm leading-6 text-gray-600  dark:bg-gray-800  dark:text-gray-300">
             This information will be displayed publicly so be careful what you share.
           </p>
             <div className="col-span-full flex flex-col items-center">
@@ -132,46 +132,46 @@ const userSettings: React.FC = () => {
 
             <div className="mt-10 flex flex-col sm:flex-row sm:justify-between">
                     <div className="mb-4 sm:mb-0 sm:w-1/2 sm:pr-2">
-                        <label htmlFor="firstname" className="block text-sm font-medium leading-6 text-gray-900">First name</label>
+                        <label htmlFor="firstname" className="block text-sm font-medium leading-6 text-gray-900  dark:text-gray-300">First name</label>
                         <input type="text" defaultValue={user?.firstname} ref={inputRefs[0]} name="firstname" id="firstname" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                     </div>
                     <div className="sm:w-1/2 sm:pl-2">
-                        <label htmlFor="lastname" className="block text-sm font-medium leading-6 text-gray-900">Lastname</label>
+                        <label htmlFor="lastname" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300">Lastname</label>
                         <input type="text" defaultValue={user?.lastname} ref={inputRefs[1]} name="lastname" id="lastname" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                     </div>
             </div>
             <div className="mt-4">
-                <label htmlFor="nickname" className="block text-sm font-medium leading-6 text-gray-900">Nickname</label>
+                <label htmlFor="nickname" className="block text-sm font-medium leading-6 text-gray-900  dark:text-gray-300">Nickname</label>
                 <input type="text" defaultValue={user?.nickname || ""} ref={inputRefs[2]} name="nickname" id="nickname" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
             </div>
             <div className="mt-4">
-                <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900  dark:text-gray-300">Description</label>
                 <textarea name="description" defaultValue={user?.profile.description || ""} ref={descriptionRef} id="description" placeholder="Write a few sentences about yourself" className="block w-full h-36 sm:h-24 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"/>
             </div>
 
             <div className="mt-4">
-                <label htmlFor="hobby" className="block text-sm font-medium leading-6 text-gray-900">Hobby</label>
+                <label htmlFor="hobby" className="block text-sm font-medium leading-6 text-gray-900  dark:text-gray-300">Hobby</label>
                 <input type="text" defaultValue={user?.profile.hobby || ""} ref={inputRefs[3]} name="hobby" id="hobby" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
             </div>
             <div className="mt-4 flex flex-col sm:flex-row sm:justify-between">
                     <div className="mb-4 sm:mb-0 sm:w-1/2 sm:pr-2">
-                        <label htmlFor="education" className="block text-sm font-medium leading-6 text-gray-900">Education</label>
+                        <label htmlFor="education" className="block text-sm font-medium leading-6 text-gray-900  dark:text-gray-300">Education</label>
                         <input type="text" defaultValue={user?.profile.education || ""} ref={inputRefs[4]} name="education" id="education" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                     </div>
                     <div className="sm:w-1/2 sm:pl-2">
-                        <label htmlFor="work" className="block text-sm font-medium leading-6 text-gray-900">Work</label>
+                        <label htmlFor="work" className="block text-sm font-medium leading-6 text-gray-900  dark:text-gray-300">Work</label>
                         <input type="text" defaultValue={user?.profile.work || ""} ref={inputRefs[5]} name="work" id="work" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                     </div>
             </div>
 
             <div className="mt-4">
-                <label htmlFor="tags" className="block text-sm font-medium leading-6 text-gray-900">Tags</label>
-                <ReactTags tags={tags} autofocus={false} delimiters={[188, 13]} handleDelete={handleDelete} handleAddition={handleAddition} inputFieldPosition="top" maxLength={30} classNames={{tagInputField: 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6', tag: "mr-1.5 p-1 rounded-md bg-gray-200", selected: "mt-3"}}/>
+                <label htmlFor="tags" className="block text-sm font-medium leading-6 text-gray-900  dark:text-gray-300">Tags</label>
+                <ReactTags tags={tags} autofocus={false} delimiters={[188, 13]} handleDelete={handleDelete} handleAddition={handleAddition} inputFieldPosition="top" maxLength={30} classNames={{tagInputField: 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6', tag: "mr-1.5 p-1 rounded-md bg-gray-200 text-gray-900", selected: "mt-3"}}/>
             </div>
         </div>
 
       <div className="mt-6 flex items-center justify-end gap-x-6">
-        <Link className="text-sm font-semibold leading-6 text-gray-900" href={'/user'}>
+        <Link className="text-sm font-semibold leading-6 text-gray-900  dark:text-gray-300" href={'/user'}>
           Cancel
         </Link>
         <button type="submit" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">

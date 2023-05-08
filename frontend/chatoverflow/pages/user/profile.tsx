@@ -16,7 +16,7 @@ const ProfilePage: React.FC = () => {
                         <SideBar/>
                     </div>
                     
-                    <div className="flex-grow w-min max-w-[1820px] py-4 md:p-4 p-2">
+                    <div className="flex-grow w-min max-w-[1820px] py-4 md:p-4 p-2  dark:bg-gray-800  dark:text-gray-300">
                       <Profile userId={id}/>
                     </div>
                 

@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { SunIcon, MoonIcon } from '@heroicons/react/24/solid'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link';
@@ -48,13 +49,18 @@ const Navbar: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    const body = document.querySelector('div');
-    if (darkMode) {
+    const body = document.querySelector('body');
+    if (body) {
+      if (darkMode) {
         body.classList.add('dark');
-    } else {
+      } else {
         body.classList.remove('dark');
+      }
+    } else {
+      console.error("Could not find the 'body' element.");
     }
-}, [darkMode]);
+  }, [darkMode]);
+  
   
 
   const refreshNotifications = async () => {
@@ -106,10 +112,17 @@ const Navbar: React.FC = () => {
                       src="/logo.png"
                       alt="Logo"/><span className='pl-1 md:pl-2'>ChatOverflow</span></a>
               </div>
-              <button onClick={() => setDarkMode(!darkMode)}>Toggle Dark Mode</button>
-
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={() => setDarkMode(!darkMode)}>
+  {darkMode ? (
+    <SunIcon className="w-6 h-6" />
+  ) : (
+    <MoonIcon className="w-6 h-6" />
+  )}
+</button>
+
                 <Menu as="div" className="relative ml-3">
+
                   <div>
                     <Menu.Button className="p-1 rounded-full text-gray-400 hover:text-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-200">
                       <span className="sr-only">View notifications</span>

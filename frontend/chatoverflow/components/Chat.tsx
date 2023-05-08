@@ -117,7 +117,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
 
   return (
         <div className="flex-1 p:2 pb-20 justify-between flex flex-col h-screen dark:bg-gray-800  dark:text-gray-300  ">
-          <div className="flex sm:items-center justify-between p-3 border-b-2 border-gray-200">
+          <div className="flex sm:items-center justify-between p-3 border-b-2 border-gray-200  dark:border-blue-900">
               <div className="relative flex items-center space-x-4">
                 <img src={otherUser?.profile?.avatar ? otherUser.profile.avatar : "/default-avatar.png"} alt="" className="w-10 sm:w-12 h-10 sm:h-12 rounded-full"/>
                 <div className="flex flex-col leading-tight">
@@ -195,7 +195,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
           )})}
 
           </div>
-          <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
+          <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0  dark:border-blue-900">
               
                 {messageEdit.mode == true ? 
                 <>
