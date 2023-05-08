@@ -1,7 +1,11 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { signOut } from 'next-auth/react';
 
 export const authOptions: NextAuthOptions = {
+    session: {
+        maxAge: 8 * 60 * 60, // 8 hours
+    },
     pages: {
         signIn: '/',
     },

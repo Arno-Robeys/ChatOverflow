@@ -35,7 +35,7 @@ app.get("/status", (req, res) => {
   res.json({ message: "Back-end is running..." });
 });
 
-app.use(expressjwt({secret: process.env.JWT_SECRET, algorithms: ['HS256']}).unless({path: ["/user/login", "/user/registreer", "/profile/createprofile", "/status"]}));
+app.use(expressjwt({secret: process.env.JWT_SECRET, algorithms: ['HS256']}).unless({path: ["/user/login", "/user/registreer", "/profile/createprofile", "/status", /^\/api-docs\/.*/]}));
 
 app.use("/user", userRouter);
 app.use("/profile", profileRouter);
@@ -43,14 +43,15 @@ app.use("/message", messageRouter);
 app.use("/notification", notificationRouter);
 app.use("/chat", chatRouter);
 
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use((err: Error, req: Request , res: Response, next: NextFunction) => {
-  console.error('Error caught by error handler:', err);
-  res.status(500).json({
-    status: 'error',
-    message: 'Something went wrong',
-  });
+  if(err.name === 'UnauthorizedError') {
+    res.status(401).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
 });
 
 app.listen(port || 3000, () => {

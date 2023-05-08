@@ -1,6 +1,11 @@
 /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *    bearerAuth:
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT
  *   schemas:
  *     User:
  *       type: object
@@ -279,7 +284,6 @@ router.post("/registreer", async (req, res) => {
 router.post("/login", async (req, res) => {
     const email = req.body.email
     const password = req.body.password
-    //throw new Error("test")
     try {
         const user = await userService.loginUser(email, password)
         res.status(200).json({status: "Authentication Succesful", user})
