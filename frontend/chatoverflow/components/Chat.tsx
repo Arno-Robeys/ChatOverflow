@@ -140,28 +140,28 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
   }, [messages]);
 
   return (
-        <div className="flex-1 p:2 pb-20 justify-between flex flex-col h-screen">
-          <div className="flex sm:items-center justify-between p-3 border-b-2 border-gray-200">
+        <div className="flex-1 p:2 pb-20 justify-between flex flex-col h-screen dark:bg-gray-800  dark:text-gray-300  ">
+          <div className="flex sm:items-center justify-between p-3 py-4 pb-5 border-b-2 border-gray-200  dark:border-blue-900">
               <div className="relative flex items-center space-x-4">
                 <img src={otherUser?.profile?.avatar ? otherUser.profile.avatar : "/default-avatar.png"} alt="" className="w-10 sm:w-12 h-10 sm:h-12 rounded-full"/>
                 <div className="flex flex-col leading-tight">
                     <div className="text-2xl mt-1 flex items-center">
-                      <span className="text-gray-700 mr-3">
+                      <span className="text-gray-700  dark:text-gray-300 mr-3">
                         {otherUser && (otherUser.nickname ? otherUser.nickname : `${otherUser.firstname} ${otherUser.lastname}`)}
                       </span>
                     </div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <Link href={`/user/profile?id=${otherUser?.userid}`} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-20 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none">Profile</Link>
-                <Link href={"/user"} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none">
+                <Link href={`/user/profile?id=${otherUser?.userid}`} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-20 transition duration-500 ease-in-out text-gray-500  dark:text-gray-300 hover:bg-gray-300 focus:outline-none">Profile</Link>
+                <Link href={"/user"} type="button" className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500  dark:text-gray-300 hover:bg-gray-300 focus:outline-none">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                   </svg>
                 </Link>
               </div>
           </div>
-          <div ref={scrollableNodeRef} id="messages" className="flex flex-col mt-auto space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+          <div ref={scrollableNodeRef} id="messages" className="flex flex-col mt-auto space-y-4 p-3 pt-16 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
               
           {messages.map((message) =>  {
             return (
@@ -184,14 +184,14 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
                   >
                     <Menu.Items className="absolute right-2 bottom-6 z-10 w-24 rounded-md bg-white shadow-lg">
                       <Menu.Item>
-                        <a onClick={() => handleEditMode(message.messageid, message.message)} className="flex items-center p-2 border-b hover:bg-gray-100">
+                        <a onClick={() => handleEditMode(message.messageid, message.message)} className="flex items-center p-2 border-b hover:bg-gray-100 hover:rounded-md">
                           <p className="text-gray-600 text-sm mx-2">
                             Edit
                           </p>
                         </a>
                       </Menu.Item>
                       <Menu.Item>
-                        <a onClick={() => deleteMessage(message.messageid)} className="flex items-center p-2 hover:bg-gray-100">
+                        <a onClick={() => deleteMessage(message.messageid)} className="flex items-center p-2 hover:bg-gray-100 hover:rounded-md">
                           <p className="text-gray-600 text-sm mx-2">
                             Delete
                           </p>
@@ -219,7 +219,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
           )})}
 
           </div>
-          <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
+          <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0  dark:border-blue-900">
               
                 {messageEdit.mode == true ? 
                 <>
@@ -238,7 +238,7 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
                 </>
               :
               <div className="relative flex">
-                <input type="text" value={input} onKeyDown={(e) => {e.key === 'Enter' && sendMessage()}} placeholder="Write your message!" onChange={(e) => setInput(e.target.value)} className="w-full focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 rounded-md py-3"></input>
+                <input type="text" value={input} onKeyDown={(e) => {e.key === 'Enter' && sendMessage()}} placeholder="Write your message!" onChange={(e) => setInput(e.target.value)} className="w-full focus:placeholder-gray-400 text-gray-600 dark:text-gray-300 dark:bg-gray-800 placeholder-gray-600 rounded-md py-3"></input>
                 <div className="absolute right-0 items-center inset-y-0 flex">
                     <button type="button" onClick={sendMessage} className="inline-flex items-center justify-center rounded-lg px-4 h-full transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none">
                       <span className="font-bold hidden sm:block">Send</span>

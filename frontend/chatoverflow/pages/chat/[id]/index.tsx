@@ -13,7 +13,7 @@ const ChatPage: React.FC<{changeChat?: () => void, chatChanged?: boolean}> = ({c
             <div className='overflow-hidden'>
                 {/* 2 components */}
                     <div className="flex flex-wrap bg-[#ffffff] h-screen">
-                        <div className=" border min-w-[300px] max-w-[500] bg-gray-50 hidden sm:block">
+                        <div className=" border min-w-[300px] max-w-[500] bg-gray-50  dark:border-blue-900 hidden sm:block">
                             <SideBar/>
                         </div>
                         

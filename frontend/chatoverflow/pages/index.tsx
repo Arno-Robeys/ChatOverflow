@@ -23,7 +23,6 @@ const Home: React.FC = () => {
             callbackUrl: "/user"
         });
 
-
         if (response === undefined || response.error) {
             setErrors(["Email or password are incorrect"]);
         } 
