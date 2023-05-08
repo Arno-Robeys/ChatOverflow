@@ -54,10 +54,10 @@ const SideBar: React.FC<{method?: () => void}> = ({method}) => {
     {/*Chat list or search results*/}
     {isSearching ? 
     
-    <section className="flex flex-col antialiased bg-gray-50 text-gray-600 min-h-screen">
+    <section className="flex flex-col antialiased bg-gray-50 text-gray-600 dark:bg-gray-800  dark:text-gray-300 min-h-screen">
     <div className="h-full">
             <div className="py-3 px-5">
-                <h3 className="text-xs font-semibold uppercase text-gray-400 mb-1">Users</h3>
+                <h3 className="text-xs font-semibold uppercase text-gray-400 dark:text-gray-300 mb-1">Users</h3>
                 {searchResults.length === 0 ? 
                   <div className="flex justify-center items-center h-40">
                   <p className="text-lg text-gray-400">No user found</p>
@@ -68,12 +68,12 @@ const SideBar: React.FC<{method?: () => void}> = ({method}) => {
 
 
                         return (
-                          <div onClick={method} key={user.userid} className='w-full text-left py-2 hover:bg-gray-100'>
+                          <div onClick={method} key={user.userid} className='w-full text-left py-2 hover:bg-gray-100 hover:dark:border-blue-900'>
                             <Link href={`/user/profile?id=${user.userid}`}>
                                 <div className="flex items-center">
                                 <img className="rounded-full items-start flex-shrink-0 mr-3" width="32" height="32" src={user?.profile?.avatar ? user.profile.avatar : "/default-avatar.png"} />
                                     <div>
-                                      <h4 className="text-sm font-semibold text-gray-900">{user.nickname ? user.nickname : user.firstname + ' ' + user.lastname}</h4>
+                                      <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-300">{user.nickname ? user.nickname : user.firstname + ' ' + user.lastname}</h4>
                                     </div>
                                 </div>
                             </Link>

@@ -37,6 +37,21 @@ const Navbar: React.FC = () => {
     setIsOpen(false)
   }
 
+  const [darkMode, setDarkMode] = useState(() => {
+    const storedValue = localStorage.getItem('darkMode');
+    return storedValue ? JSON.parse(storedValue) : false;
+  });
+
+  useEffect(() => {
+    const body = document.querySelector('div');
+    if (darkMode) {
+        body.classList.add('dark');
+    } else {
+        body.classList.remove('dark');
+    }
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+}, [darkMode]);
+
   useEffect(() => {
     if(session) {
       refreshNotifications();
@@ -46,20 +61,10 @@ const Navbar: React.FC = () => {
       });
     }
   }, [session]);
-  const [darkMode, setDarkMode] = useState(false);
 
-  useEffect(() => {
-    const body = document.querySelector('body');
-    if (body) {
-      if (darkMode) {
-        body.classList.add('dark');
-      } else {
-        body.classList.remove('dark');
-      }
-    } else {
-      console.error("Could not find the 'body' element.");
-    }
-  }, [darkMode]);
+  
+ 
+
   
   
 

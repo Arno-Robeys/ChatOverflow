@@ -14,17 +14,6 @@ const UserHome: React.FC = () => {
         fetchData();
     }, [session?.user.id]);
 
-    const [darkMode, setDarkMode] = useState(false);
-    useEffect(() => {
-        const body = document.querySelector('div');
-        if (darkMode) {
-            body.classList.add('dark');
-        } else {
-            body.classList.remove('dark');
-        }
-    }, [darkMode]);
-    
-    // ...
     
 
 
