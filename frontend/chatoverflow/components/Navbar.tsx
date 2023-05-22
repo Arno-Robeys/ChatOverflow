@@ -45,10 +45,12 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     const body = document.querySelector('div');
-    if (darkMode) {
-        body.classList.add('dark');
-    } else {
-        body.classList.remove('dark');
+    if(body) {
+      if (darkMode) {
+          body.classList.add('dark');
+      } else {
+          body.classList.remove('dark');
+      }
     }
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
 }, [darkMode]);

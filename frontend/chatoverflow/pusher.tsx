@@ -1,6 +1,6 @@
 import PusherClient from 'pusher-js';
 
-export const pusher = new PusherClient('728f59702ac037fb47f4', {
+export const pusher = new PusherClient('8608120168b14f416d62', {
     cluster: 'eu'
   });
 
