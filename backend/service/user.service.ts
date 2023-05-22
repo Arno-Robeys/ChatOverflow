@@ -37,8 +37,8 @@ const loginUser = async (email: string, password: string): Promise<UserLogin> =>
     if(!email) throw new Error('Email must be provided');
     if(!password) throw new Error('Password must be provided');
     const user = await userDB.getUserByEmail({email: email});
-
-    if(!bcrypt.compare(password, user.password)) throw new Error("Password incorrect")
+    const check = await bcrypt.compare(password, user.password);
+    if(!check) throw new Error("Password incorrect")
     return { userid: user.userid, firstname: user.firstname, lastname: user.lastname, email: user.email , token: generateJwtToken(email)};
 };
 
