@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Chats from './Chats';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import userService from '@/service/userService';
 
 
 const SideBar: React.FC<{method?: () => void}> = ({method}) => {
@@ -30,9 +31,8 @@ const SideBar: React.FC<{method?: () => void}> = ({method}) => {
       setSearchResults([]);
     } else {
       setIsSearching(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/find/${event.target.value}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
-      if(response.ok){
-        const users = await response.json();
+      const users  = await userService.findUserByName(event.target.value, session?.user.accessToken);
+      if(users !== null){
         setSearchResults(users.allUsers);
       } else setSearchResults([]);
     }

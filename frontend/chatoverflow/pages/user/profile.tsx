@@ -6,7 +6,7 @@ import Profile from "@/components/Profile";
 const ProfilePage: React.FC = () => {
 
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = router.query as { id: string };
 
     return (
         // main container
