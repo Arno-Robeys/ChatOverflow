@@ -3,8 +3,7 @@ import Link from 'next/link';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { pusher } from '../pusher';
 import { Menu, Transition } from '@headlessui/react';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/router';
+import chatService from '@/service/chatService';
 
 const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
   const { data: session } = useSession();
@@ -15,89 +14,23 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
   const [input, setInput] = useState<string>('');
   const [updateChat, setUpdateChat] = useState<boolean>(false);
   const [messageEdit, setMessageEdit] = useState({mode:false, messageid : 0});
-  const router = useRouter();
-  
-    const errorLogout = async () => {
-        await signOut({
-          redirect: false,
-        });
-        sessionStorage.removeItem('avatar');
-        router.push('/');
-        toast.error('You sended a request with an invalid token. Please login again.');
-    }
 
     const sendMessage = async () => {
-      if(!input.trim()) return;
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/send`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': `bearer ${session?.user.accessToken}`
-        },
-        body: JSON.stringify({
-          message: input,
-          chatid: parseInt(chatId),
-          userid: parseInt(session?.user.id)
-        })
-      });
-      
-      if(response.ok) {
-      const data = await response.json();
-
-      const notification = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/createnotification`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': `bearer ${session?.user.accessToken}`
-        },
-        body: JSON.stringify({
-          messageid: data.messageid,
-          chatid: data.chatid,
-          userid: otherUser.userid
-        })
-      });
-      setInput('');
-
-      } else if(response.status === 401) {
-        errorLogout();
+      if(input.trim()) {
+        await chatService.sendMessageAndNotifications(input, chatId, otherUser.userid, session);
+        setInput('');
       }
     }
 
     const deleteMessage = async (messageid: number) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/delete/${messageid}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': `bearer ${session?.user.accessToken}`
-        },
-        body: JSON.stringify({
-          chatid: chatId
-        })
-      });
-      if(response.status === 401) {
-        errorLogout();
-      }
+      await chatService.deleteMessage(chatId, messageid, session);
     }
 
     const editMessage = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/update`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': `bearer ${session?.user.accessToken}`
-        },
-        body: JSON.stringify({
-          messageid: messageEdit.messageid,
-          message: input,
-          chatid: chatId
-        })
-      });
-
+      const response = await chatService.editMessage(input, chatId, messageEdit.messageid, session);
       if(response.ok) {
         setMessageEdit({mode: false, messageid: 0});
         setInput('');
-      } else if(response.status === 401) {
-        errorLogout();
       }
     }
 
@@ -114,17 +47,15 @@ const Chat: React.FC<{ chatId: string}> = ({ chatId }) => {
         setUpdateChat((updateChat) => !updateChat);
       });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/${chatId}`, { method: 'GET', headers: { 'authorization': `bearer ${session?.user.accessToken}` } });
-      if(response.ok) {
-        const data = await response.json()
-        setOtherUser(data.users.find((user: { userid: number; }) => user.userid !== parseInt(session?.user.id)));
-      } else if(response.status === 401) errorLogout();
+      const chat = await chatService.getChat(chatId, session?.user.accessToken);
+      if(chat !== null) {
+        setOtherUser(chat.users.find((user: { userid: number; }) => user.userid !== parseInt(session?.user.id)));
+      } 
 
-      const response2 = await fetch(`${process.env.NEXT_PUBLIC_URL}/message/chat/${chatId}`, { method: 'GET', headers: { 'authorization': `bearer ${session?.user.accessToken}` } });
-      if(response2.ok) {
-        const data2 = await response2.json();
-        setMessages(data2);
-      } else if(response2.status === 401) errorLogout();
+      const messages = await chatService.getMessagesFromChat(chatId, session?.user.accessToken);
+      if(messages !== null) {
+        setMessages(messages);
+      } 
     })();
     return () => {
       pusher.unsubscribe(`chat${chatId}`);

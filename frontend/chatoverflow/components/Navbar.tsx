@@ -24,10 +24,8 @@ const Navbar: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   
   const logout = async () => {
-    await signOut({
-      redirect: false,
-    });
     sessionStorage.removeItem('avatar');
+    await signOut({ redirect: false});
     router.push('/');
     toast.success('Logged out successfully');
   }
