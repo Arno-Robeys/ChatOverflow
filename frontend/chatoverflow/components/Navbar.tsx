@@ -12,6 +12,7 @@ import moment from 'moment';
 import { pusher } from '@/pusher'
 import { Notification } from '@/types/notification.type'
 import userService from '@/service/userService'
+import { UserProfile } from '@/types/userprofile.type'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -55,6 +56,7 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     if(session) {
+      getAvatar();
       refreshNotifications();
       const channel = pusher.subscribe(`notification-${session?.user.id}`);
       channel.bind('notification', (data: any) => {
@@ -62,6 +64,13 @@ const Navbar: React.FC = () => {
       });
     }
   }, [session]);
+
+  const getAvatar = async () => {
+    const response: UserProfile | null = await userService.getUserProfile(session?.user.id ?? "", session?.user.accessToken);
+    if(response !== null) {
+        sessionStorage.setItem('avatar', response.profile.avatar ?? '/default-avatar.png');
+    }
+  }
 
   const refreshNotifications = async () => {
     const notifications = await userService.getNotificationsOfUser(session?.user.id as string, session?.user.accessToken);

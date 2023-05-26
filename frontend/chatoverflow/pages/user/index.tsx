@@ -5,20 +5,7 @@ import userService from "@/service/userService";
 import { UserProfile } from "@/types/userprofile.type";
 
 const UserHome: React.FC = () => {
-    const { data: session } = useSession();
-
-    useEffect(() => {
-        async function fetchData() {
-            const response: UserProfile | null = await userService.getUserProfile(session?.user.id ?? "", session?.user.accessToken);
-            if(response !== null) {
-                sessionStorage.setItem('avatar', response.profile.avatar ?? '/default-avatar.png');
-            }
-        }
-        fetchData();
-    }, [session?.user.id]);
-
-    
-
+    const { data: session } = useSession();  
 
     return (
         // main container
