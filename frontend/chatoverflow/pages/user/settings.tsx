@@ -27,11 +27,9 @@ const userSettings: React.FC = () => {
       var data = await response.json();
       setUser(data);
       setSelectedAvatar(data?.profile?.avatar);
-      setTags(data?.profile?.tags?.split(", ").map((tag: string) => {
-            if (!tag.trim()) return null;
-            return { id: tag, text: tag };
-          }).filter((tag: string) => tag !== null));
-    }
+      var tags = data?.profile?.tags?.split(", ").map((tag: string) => {if (!tag.trim()) return null; return { id: tag, text: tag };}).filter((tag: string) => tag !== null)
+      setTags([...tags as Tag[]]);
+      }
   })()},[]);
 
   const handleSubmit : FormEventHandler<HTMLFormElement> = async (e) => {
@@ -71,6 +69,7 @@ const userSettings: React.FC = () => {
   };
 
   const handleAddition = (tag: any) => {
+    console.log(tags)
     if(tag.text.length > 30) return;
     setTags([...tags, tag]);
   };

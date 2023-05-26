@@ -1,56 +1,44 @@
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 import { useEffect, useState } from "react";
 import { UserProfile } from "@/types/userprofile.type";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
+import userService from "@/service/userService";
+import chatService from "@/service/chatService";
+import { UserChat } from "@/types/userchat.type";
 
-const Profile: React.FC<{ userId?: string | string[] }> = ({ userId }) => {
+const Profile: React.FC<{ userId?: string }> = ({ userId }) => {
 
     const { data: session } = useSession();
 
     const loggedInUserId = session?.user.id;
 
-    const profileUserId = userId || loggedInUserId;
+    const profileUserId = userId || loggedInUserId as string;
 
     const [profile, setProfile] = useState<UserProfile>();
 
     useEffect(() => {
         (async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/${profileUserId}/profile`, { method: 'GET', headers: { 'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}` } });
-            if(response.ok) {
-                const data = await response.json();
+            const userProfile: UserProfile | null = await userService.getUserProfile(profileUserId, session?.user.accessToken);
+            if(userProfile !== null) {
                 const filteredProfileData = Object.fromEntries(
-                    Object.entries(data.profile || {})
+                    Object.entries(userProfile.profile || {})
                     .filter(([key, value]) => value !== null && value !== undefined && value !== "" && key !== "userid")
                   );
-                data.profile = filteredProfileData;
-                setProfile(data);
+                userProfile.profile = filteredProfileData as any;
+                setProfile(userProfile);
             }
+
         })();
     }, [profileUserId])
 
     const router = useRouter();
 
     const handleChatClick = async (): Promise<void> => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/create`, {
-            method: 'POST',
-            body: JSON.stringify({ user1: loggedInUserId, user2: profileUserId }),
-            headers: { 'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}` },
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            router.push(`/chat/${data.chatid}`);
-        } else if(response.status === 401) {
-            await signOut({
-              redirect: false,
-            });
-            sessionStorage.removeItem('avatar');
-            router.push('/');
-            toast.error('You sended a request with an invalid token. Please login again.');
-          }
-
+        const chat : UserChat | null = await chatService.createChat(loggedInUserId as string, profileUserId, session?.user.accessToken as string);
+        if(chat !== null) {
+            router.push(`/chat/${chat.chatid}`);
+        }
     };
 
     return (

@@ -3,7 +3,7 @@ import Chat from "@/components/Chat";
 import SideBar from "@/components/Sidebar";
 
 
-const ChatPage: React.FC<{changeChat?: () => void, chatChanged?: boolean}> = ({changeChat, chatChanged}) => {
+const ChatPage: React.FC = () => {
 
   const router = useRouter();
   const { id } = router.query;

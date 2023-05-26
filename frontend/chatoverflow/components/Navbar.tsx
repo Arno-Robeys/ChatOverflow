@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, BellIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -10,8 +10,8 @@ import React from 'react'
 import SideBar from './Sidebar'
 import moment from 'moment';
 import { pusher } from '@/pusher'
-import { notification } from '@/types/notification.type'
-import { log } from 'console'
+import { Notification } from '@/types/notification.type'
+import userService from '@/service/userService'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -21,13 +21,11 @@ const Navbar: React.FC = () => {
 
   const router = useRouter();
   const {data: session} = useSession();
-  const [notifications, setNotifications] = useState<notification[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   
   const logout = async () => {
-    await signOut({
-      redirect: false,
-    });
     sessionStorage.removeItem('avatar');
+    await signOut({ redirect: false});
     router.push('/');
     toast.success('Logged out successfully');
   }
@@ -65,24 +63,15 @@ const Navbar: React.FC = () => {
     }
   }, [session]);
 
-  
- 
-
-  
-  
-
   const refreshNotifications = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/user/${session?.user.id}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
-    if(response.ok) {
-      const data = await response.json();
-      setNotifications(data);
-    } else if(response.status === 401) {
-      logout();
+    const notifications = await userService.getNotificationsOfUser(session?.user.id as string, session?.user.accessToken);
+    if(notifications !== null) {
+      setNotifications(notifications);
     }
   }
 
   const markAsRead = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/notification/read/${session?.user.id}`, {method: "PUT", headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
+    const response = await userService.markAsReadNotifications(session?.user.id as string, session?.user.accessToken);
     if(response.ok) {
       toast.success('Marked all as read');
     } else {

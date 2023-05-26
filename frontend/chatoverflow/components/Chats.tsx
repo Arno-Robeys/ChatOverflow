@@ -1,33 +1,22 @@
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link'
 import{ useState,useEffect } from 'react'
 import { UserChat } from "@/types/userchat.type";
 import moment from 'moment';
 import { pusher } from "../pusher"
-import { useRouter } from 'next/router';
-import { toast } from 'react-hot-toast';
+import chatService from '@/service/chatService';
 
 const Chats: React.FC<{method?: () => void }> = ({method}) => {
 
     const { data: session } = useSession();
     if(!session) return (<div>Not logged in</div>);
     const [chats, setChats] = useState<UserChat[]>([]);
-    const router = useRouter();
-
 
     const fetchData = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/chat/user/${session?.user.id}`, {method: 'GET', headers: {'Content-Type': 'application/json', 'authorization': `bearer ${session?.user.accessToken}`}});
-      if(response.ok) {
-          const data = await response.json();
-          setChats(data);
-      } else if(response.status === 401) {
-          await signOut({
-            redirect: false,
-          });
-          sessionStorage.removeItem('avatar');
-          router.push('/');
-          toast.error('You sended a request with an invalid token. Please login again.');
-        }
+      const chats = await chatService.getUserChats(session?.user.id, session?.user.accessToken);
+      if(chats !== null) {
+          setChats(chats);
+      }
     }
 
     useEffect(() => {

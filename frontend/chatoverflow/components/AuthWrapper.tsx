@@ -4,11 +4,11 @@ import { PropsWithChildren } from "react";
 
 const AuthWrapper = ({ children }: PropsWithChildren) => {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   if(status === "loading") return <div>Loading...</div>
  
   if (!session) {
-    const router = useRouter();
     const handleLogin = () => {router.push("/")};
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
