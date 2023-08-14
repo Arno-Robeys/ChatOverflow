@@ -1,3 +1,3 @@
-# Web 4 project
+# ChatOverflow
 
-To get started, open the Readme.md files in the backend and frontend folders.
+A simple chatapp created by 2 students as a project for school
